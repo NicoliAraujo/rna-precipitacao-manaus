@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 1 de jun de 2016
 
@@ -15,7 +16,7 @@ class DataPlotting(object):
     classdocs
     '''
     def getMonthDataFrame(self, month):
-        return pd.read_csv('./dados/meses/' + str(month) + '.csv', sep = r',')
+        return pd.read_csv('../data/files/monthly/RainfallByDay' + str(month) + 'd.csv', sep = r',')
         
     
     '''def getRainfallTest(self):
@@ -64,8 +65,8 @@ class DataPlotting(object):
         #x = sns.barplot(x = self.DataFrame.index, y = 'RAINFALL', data = self.DataFrame, palette = 'Greys')
         x = sns.barplot(x="MONTH", y="RAINFALL", data=self.DataFrame,palette="Greys")
         x.set(xlabel='Meses', ylabel='Precipitação')
-        sns.plt.savefig('./dados/imagens/PrecxMesMedia.pdf')
-        sns.plt.savefig('./dados/imagens/PrecxMesMedia.png')
+        sns.plt.savefig('../data/images/PrecxMesMedia.pdf')
+        sns.plt.savefig('../data/images/PrecxMesMedia.png')
         plt.close()
         
          

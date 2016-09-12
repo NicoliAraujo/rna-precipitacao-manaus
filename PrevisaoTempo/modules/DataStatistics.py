@@ -12,18 +12,18 @@ import matplotlib.pyplot as plt
 import random
 import math
 import numpy as np
-from unittest.mock import inplace
+
 
 class DataStatistics(object):
     '''
     Pega arquivos do tipo .csv com dados acumulados anuais e diários de um mês e realiza estatísticas 
     '''
 
-    def getAnnualDataFrame(self, month):
-        return pd.read_csv('./Data/files/monthly/RainfallByYear/' + str(month) + 'a.csv', sep = r',')
+    def getAnnualDataFrame(self):
+        return pd.read_csv('./Data/files/monthly/RainfallByYear/' + str(self.month) + 'a.csv', sep = r',')
      
-    def getDailyDataFrame(self, month):
-        return pd.read_csv('./Data/files/monthly/RainfallByDay/' + str(month) + 'd.csv', sep = r',')
+    def getDailyDataFrame(self):
+        return pd.read_csv('./Data/files/monthly/RainfallByDay/' + str( self.month) + 'd.csv', sep = r',')
     
     def getDailyMean(self, param):
         return self.DailyDataFrame[param].mean()
@@ -68,63 +68,73 @@ class DataStatistics(object):
         return(size, mean, std, zCritical, margin_of_error, confidence_interval)
     
    
-    def writeInfo(self, param, month):
-        
-        with open('Data/files/statistics/statistics' + month + '.txt', 'w+') as file:
+    def writeInfo(self, param):
+        '''escreve em um arquivo a média, o desvio padrão, o z, a margem de erro e o intervalo de confiança de um conjunto de parâmetros de um dataframe.
+            -paramDict: parâmetro do dataframe que será avaliado
+               
+        '''
+        with open('Data/files/statistics/statistics' +  self.month + '.txt', 'w+') as file:
             file.write('\t\t\tStatistical Data\n\n')
-            
-            file.write('\t\tRAINFALL\n')
+        
+            file.write('\t\t', param, '\n')
             
             (n, mean, std, zCritical, margin_of_error, confidence_interval) = self.getCI(param)
             file.write('\tn: '+ str(n) + '\n\tMean: '+ str(mean) + '\n\tstd: ' + str(std) + '\n\tz: ' +  str(zCritical) +  
                        '\n\tmargin of error: ' + str(margin_of_error) + '\n\tConfidence Interval: ' + str(confidence_interval))
             
-            file.write('\n\tAHT Mean: ' + str(self.getDailyMean('AHT')))
-            file.write('\n\tALT Mean: ' + str(self.getDailyMean('ALT')))
-            file.write('\n\tARH Mean: ' + str(self.getDailyMean('ARH')))
+            #file.write('\n\tAHT Mean: ' + str(self.getDailyMean('AHT')))
+            #file.write('\n\tALT Mean: ' + str(self.getDailyMean('ALT')))
+            #file.write('\n\tARH Mean: ' + str(self.getDailyMean('ARH')))
 
     def setCorrData(self):
-        dfcorr = {}
-        #abrindo as dfs de todos os meses e colocando num dicionário
-        for i in range(1, 13):
-            stri = str(i)
-            #criando uma chave do dicionário pra cada mês  
-            dfcorr[i] = self.getAnnualDataFrame(stri)['RAINFALL']
-            
-        #criando um df
-        dfcorr = pd.DataFrame(dfcorr)
         
         matCorr = dfcorr.corr()
         matCorr.sort(axis = 1, inplace=True)
         matCorr = matCorr.round(2)
         
-        print(matCorr)
         return matCorr
-        
-           
-   
     
-    def writeCorrMatrix(self, df):
+    def setAllRainfallData(self):
+        allRainfallDict = {}
+        #abrindo as dfs de todos os meses e colocando num dicionário
+        for i in range(1, 13):
+            stri = str(i)
+            #criando uma chave do dicionário pra cada mês  
+            allRainfallDict[i] = self.getAnnualDataFrame(stri)['RAINFALL']
+            
+        #criando um df
+        return pd.DataFrame(allRainfallDict)
+        
+        
+    
+    def writeCorrMatrix(self):
         '''Pearson Correlation Matrix
-            This matrix takes for input all the dataframes in RainfallByYear.
+            AllRainfallDF takes for input all the dataframes in RainfallByYear.
             To generate this matrix, it was created a DataFrame containing 
             the accumulated rainfall in a month for each year.'''
 
         filename = './Data/files/statistics/PearsonCorrelationMatrix.csv' #a for annual
+        AllRainfallDF = setCorrData()
         with open(filename, 'w') as file:
-            df.to_csv(file)
+            AllRainfallDF.to_csv(file)
             
-    def checkNaNData(self, month):
-        totalPerDay = self.getAnnualDataFrame(month)
-        nanRainfall = total.loc[total['RAINFALL'].isnull() == True]
-        allNan = total.loc[total['RAINFALL'].isnull() == True and]
+    def checkNaNData(self):
+        totalPerDay = self.DailyDataFrame
+        nanRainfall = totalPerDay.loc[totalPerDay['RAINFALL'].isnull() == True]
+        #colocar outros nan
+        allNan = totalPerDay.loc[totalPerDay['RAINFALL'].isnull() == True]
+        print(allNan, '\n', nanRainfall, '\n', totalPerDay[300:400])
         
         
     def __init__(self, month):
         '''
         Constructor
         '''
-        '''self.DailyDataFrame = self.getDailyDataFrame(month)
-        self.AnnualDataFrame = self.getAnnualDataFrame(month)
-        self.writeInfo('RAINFALL', month)
+        '''self.DailyDataFrame = self.getDailyDataFrame()
+        self.AnnualDataFrame = self.getAnnualDataFrame()
+        self.writeInfo('RAINFALL')
         '''
+        self.month = month
+        self.DailyDataFrame = self.getDailyDataFrame()
+        self.AllRainfallData = self.setAllRainfallData()
+        

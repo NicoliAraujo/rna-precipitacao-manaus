@@ -26,8 +26,8 @@ class MatlabInputConfig(object):
         print(monthlist)
         
         for currMonth in monthlist:
-            dictMonthsData[currMonth] = pd.read_csv('./Data/files/monthly/RainfallByYear/' + str(currMonth) + 'a.csv', sep = r',')
-        dictMonthsData['Output'] = pd.read_csv('./Data/files/monthly/RainfallByYear/' + str(month) + 'a.csv', sep = r',')
+            dictMonthsData[currMonth] = pd.read_csv('../Data/files/monthly/RainfallByYear/' + str(currMonth) + 'a.csv', sep = r',')
+        dictMonthsData['Output'] = pd.read_csv('../Data/files/monthly/RainfallByYear/' + str(month) + 'a.csv', sep = r',')
         #print(dictMonthsData[1]['Year'])
         return dictMonthsData
     
@@ -66,7 +66,7 @@ class MatlabInputConfig(object):
         self.save(df, month, amtPastMonths)
      
     def save(self, df, month, amtPastMonths):
-        filename = './Data/files/MatlabInput/' + str(month) + '_PCorr_'+ str(amtPastMonths) + 'inputs' + '.csv'
+        filename = '../Data/files/MatlabInput/' + str(month) + '_PCorr_'+ str(amtPastMonths) + 'inputs' + '.csv'
         with open(filename, 'w') as file:
             df.to_csv(file)
         

@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 class AnnualDataConfig(object):
     '''
-    Vem diretamente do .csv original. 
+    Vem do /files/monthly/RainfallByDay/monthd.csv . 
     Gera um arquivo:
     
         Year    RAINFALL
@@ -29,7 +29,7 @@ class AnnualDataConfig(object):
     '''
 
     def getMonthDataFrame(self):
-        return pd.read_csv('./Data/files/monthly/RainfallByDay/' + str(self.month) + 'd.csv', sep = r',')
+        return pd.read_csv('../../data/files/monthly/RainfallByDay/' + str(self.month) + 'd.csv', sep = r',')
     
     def setDataFrame(self, df):
         dflist = [[],[]]

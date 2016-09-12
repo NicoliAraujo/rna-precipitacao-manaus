@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//PrevisaoTempo/modules/AnnualDataConfig.py=utf-8
+encoding//PrevisaoTempo/modules/DataPlotting.py=utf-8
+encoding//PrevisaoTempo/modules/DataStatistics.py=utf-8
+encoding//PrevisaoTempo/modules/MatlabInputConfig.py=utf-8
+encoding//PrevisaoTempo/modules/main.py=utf-8
+encoding//PrevisaoTempo/modules/util/CDMFromTxtToCSV.py=utf-8
+encoding//PrevisaoTempo/modules/util/FromTxtToCSV.py=utf-8

@@ -4,21 +4,21 @@ Created on 2 de mai de 2016
 
 @author: Nicoli Araujo
 '''
-import pandas as pd
-import numpy as np
+
+from Util import FromTxtToCSV
 #import seaborn as sns
 
-class DailyDataConfig(object):
+class CDMFromTxtToCSV(FromTxtToCSV):
     '''
-    Vem diretamente do .csv original. 
+    Vem diretamente do ClimateDataMao.txt original. 
     Gera um arquivo:
         Date    AHT    ALT    ARH    WS    RAINFALL
-    1-10-1970    30.8    21.3    89    1.0    29.5
-    2-10-1970    34.2    24.3    79.25    6.8    18.2
-    3-10-1970    33.9    23.5    75.25    6.17    7
-    4-10-1970    34    24.9    80.25    5.0    0
-    5-10-1970    33.4    22.8    79    3.1    3.9
-    6-10-1970    34.6    25.9    74.5    4.23    0
+    1-10-1970   30.8   21.3   89     1.0    29.5
+    2-10-1970   34.2   24.3   79.25  6.8    18.2
+    3-10-1970   33.9   23.5   75.25  6.17   7
+    4-10-1970   34     24.9   80.25  5.0    0
+    5-10-1970   33.4   22.8   79     3.1    3.9
+    6-10-1970   34.6   25.9   74.5   4.23   0
     
     para cada mês.
     
@@ -27,18 +27,12 @@ class DailyDataConfig(object):
 
     '''
     
-    def getOldFileData(self, path):
-        '''abre o arquivo de entrada'''
-        with open(path, 'r', encoding = 'latin-1') as file:
-            self.OldFileData = file.read().splitlines()
+    
     
     #def setNewFileData(self, name):
         #with open(name, 'w') as file:
     
-    def removeFirstLine(self):
-        '''remove as primeiras linhas do arquivo - as que não tem dados'''
-        for i in range(0,16): 
-            self.OldFileData.pop(0)
+
     
     def setCollumns(self):
         '''cria listas com os dados retirados do arquivo de entrada para ser manipulados posteriormente'''
@@ -102,20 +96,13 @@ class DailyDataConfig(object):
                 self.colDate[i-1] = ''  
     
                    
-    def truncListNumbers(self, list):
-        '''
-        trunca os números da lista dada para apenas 2 casas decimais
-        '''
-        for i in range(0, len(list)):
-            if list[i] != '':
-                list[i] = np.round(float(list[i]),2)
-
+    
     def setData(self, path):
         '''
         pega os dados localizados em path, padroniza e os transfere para um dataFrame
         '''
         self.getOldFileData(path)
-        self.removeFirstLine()
+        self.removeFirstLines(16)
         self.setCollumns()
         self.truncListNumbers(self.colWS)
         self.colDate = self.setDateSeparator(self.colDate)
@@ -165,16 +152,7 @@ class DailyDataConfig(object):
      
      
                     
-    def getLimitYears(self):
-        newestYear = 1900
-        oldestYear = 5000
-        for date in self.dataFrame.index:
-            year = int(date[-4:])
-            if year >= newestYear:
-                newestYear = year
-            if year <= oldestYear:
-                oldestYear = year
-        return (oldestYear,newestYear)
+
 
     def printMonth(self, month):
         '''
