@@ -4,8 +4,9 @@ Created on 12 de set de 2016
 
 @author: Nicoli Araujo
 '''
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 
 class FromTxtToCSV():
     def getOldFileData(self, path):
@@ -46,6 +47,7 @@ class MMFromTxtToCSV(FromTxtToCSV):
     
     def replaceSeparator(self, sepList):
         for sep in sepList:
+            #print(sep)
             for i in range(len(self.OldFileData)):
                 self.OldFileData[i] = self.OldFileData[i].replace(sep, ';')
                 
@@ -108,7 +110,7 @@ class MMFromTxtToCSV(FromTxtToCSV):
         self.insertLastComma()
         self.setCollumns()
         self.setDataFrame()
-        self.saveCSV(name)
+        #self.saveCSV(name)
         #print(self.ColumnDict)
     
     def saveCSV(self, name):

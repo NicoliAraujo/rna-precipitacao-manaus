@@ -5,9 +5,11 @@ Created on 2 de mai de 2016
 @author: Nicoli Araujo
 '''
 
-from Util import FromTxtToCSV
-#import seaborn as sns
+import FromTxtToCSV 
+import pandas as pd
+import numpy as np
 
+#import seaborn as sns
 class CDMFromTxtToCSV(FromTxtToCSV):
     '''
     Vem diretamente do ClimateDataMao.txt original. 

@@ -5,10 +5,11 @@ Created on 1 de jun de 2016
 @author: nicoli-rna
 '''
 #import seaborn as sns
-import pandas as pd
-import numpy as np
 from pandas.tseries.index import DatetimeIndex
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 
 class DataPlotting(object):

@@ -1,11 +1,12 @@
 # Graficos das relações entre variáveis indepentes e variável dependente
 # Elloá B. Guedes  - 26/03/2016
 
-import numpy as np
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+
 
 # Abrindo o arquivo
 ourData = pd.read_csv("./dados/1.csv", sep=r",")

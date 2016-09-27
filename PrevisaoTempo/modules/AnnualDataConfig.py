@@ -4,8 +4,10 @@ Created on 29 de jun de 2016
 
 @author: projeto
 '''
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+
 class AnnualDataConfig(object):
     '''
     Vem do /files/monthly/RainfallByDay/monthd.csv . 

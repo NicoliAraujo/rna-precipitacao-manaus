@@ -5,7 +5,8 @@ Created on 2 de mai de 2016
 @author: Nicoli Araujo
 '''
 
-from DataStatistics import DataStatistics
+#from DataStatistics import DataStatistics
+
 
 if __name__ == '__main__':
     #a = DailyDataConfig('./Data/original/ClimateDataMao.txt') #transfere os dados da tabela no .txt pra 12 arquivos contendo os dados

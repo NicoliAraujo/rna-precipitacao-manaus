@@ -4,8 +4,10 @@ Created on Jul 18, 2016
 
 @author: Nicoli
 '''
-import pandas as pd
 import numpy as np
+import pandas as pd
+
+
 class MatlabInputConfig(object):
     '''
     REAJUSTAR PARA OUTROS MESES
