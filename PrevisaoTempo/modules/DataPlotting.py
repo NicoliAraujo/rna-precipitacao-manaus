@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 1 de jun de 2016
+Created on 13 de out de 2016
 
-@author: nicoli-rna
+@author: pibic-elloa-nicoli
 '''
-#import seaborn as sns
+import seaborn as sns
 from pandas.tseries.index import DatetimeIndex
 
 import matplotlib.pyplot as plt
@@ -16,61 +16,43 @@ class DataPlotting(object):
     '''
     classdocs
     '''
-    def getMonthDataFrame(self, month):
-        return pd.read_csv('../data/files/monthly/RainfallByDay' + str(month) + 'd.csv', sep = r',')
-        
+    def get_data_frame(self, path):
+        return pd.read_csv(path, sep = r',', index_col = 'Year')
     
-    '''def getRainfallTest(self):
-        rainfallmean = 0
-        for i in self.monthDataFrame['RAINFALL']:
-            try:
-                rainfallmean += i
-            except:
-                pass
-        print(rainfallmean)
-    '''
+    def get_param_mean(self, param):
+        return self.month_data_frame[param].mean()
     
-    def getRainfall(self, monthDataFrame):
-        return monthDataFrame['RAINFALL'].mean()
-    
-    def getMonth(self, monthDataFrame):
-        newMonthDataFrame = pd.DataFrame()
+    def get_month_data(self, param):
+        month_data_frame = pd.DataFrame()
+        for name in self.data_frame.columns:
+            if name[-2:] == self.month:
+                month_data_frame[name[:-3]] = self.data_frame[name]
+        month_data_frame.index = self.data_frame.index
+        month_data_frame.index.name = self.data_frame.index.name
+        return month_data_frame
 
-        #newMonthDataFrame.index = monthDataFrame['Date'].month
-        newMonthDataFrame['RAINFALL'] = monthDataFrame['RAINFALL']
-        newMonthDataFrame['MONTH'] = pd.DatetimeIndex(monthDataFrame["Date"], dayfirst=True).month
-        return newMonthDataFrame
-    
-    def getMonthsRainfallDF(self):
-        self.DataFrame = pd.DataFrame()
-        for i in range(1,13):
-            monthdf = self.getMonthDataFrame(i)
-            newmonthdf = self.getMonth(monthdf)
-            self.DataFrame = pd.concat([self.DataFrame,newmonthdf])
-        print(self.DataFrame)
-        
-        #print(self.DataFrame.index)
-        #print(self.DataFrame)
-
-    
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        #self.getMonthsRainfall()
-        #months = ['Janeiro', 'Fevereiro', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-
-        self.getMonthsRainfallDF()
+    def set_graph(self, param, param_name):
+        month_data_frame = self.get_month_data(param)
+        #print(month_data_frame)
         plt.clf()
-        #self.DataFrame = self.DataFrame.groupby("MONTH").mean()
-        #x = sns.barplot(x = self.DataFrame.index, y = 'RAINFALL', data = self.DataFrame, palette = 'Greys')
-        x = sns.barplot(x="MONTH", y="RAINFALL", data=self.DataFrame,palette="Greys")
-        x.set(xlabel='Meses', ylabel='Precipitação')
-        sns.plt.savefig('../data/images/PrecxMesMedia.pdf')
-        sns.plt.savefig('../data/images/PrecxMesMedia.png')
+        plt.figure(figsize=(30,15))
+        bar_graph = sns.barplot(x=month_data_frame.index, y=param, data=month_data_frame,palette="Greys")
+        #plt.setp(bar_graph.get_xticklabels(), rotation=45)
+        bar_graph.set(xlabel=month_data_frame.index.name, ylabel=param_name)
+        sns.plt.savefig('../data/images/anomalydata/' + self.month + param + '.pdf')
+        sns.plt.savefig('../data/images/anomalydata/' + self.month + param + '.png')
         plt.close()
-        
-         
-        
-        
-        
+    
+    def __init__(self, month, path):
+        self.month = month
+        self.data_frame = self.get_data_frame(path)
+
+if __name__ == '__main__':
+    PATH = '../data/files/anomalydata/AllAnomalyData.csv'
+    PLT = DataPlotting('01', PATH)
+    PLT.set_graph('rainfall', 'Rainfall')
+    PLT.set_graph('tsa', 'TSA')
+    PLT.set_graph('nino3', 'Nino 3')
+    PLT.set_graph('nino4', 'Nino 4')
+    PLT.set_graph('nino34', 'Nino 3.4')
+    PLT.set_graph('nino12', 'Nino 1+2')
