@@ -14,44 +14,23 @@ class RainfallForecastANN(object):
     1) ler dataset
     2) identificar inputs
     3) identificar output
-    4) 
-    %Reading From File
-    filename = '1_3inputs.csv';
+    4) setar rede:
+        tipo: time series
+        medida de performance: mse     
+        passar input
+        passar output
     
-    amtInputs = 3;
-    month = 1;
-    
-    TrainData = csvread(filename, 1, 1);
-    
-    %TrainData = TrainData';
-    
-    [nRows, nColumns] = size(TrainData)
-    
-    
-    %MLP Configuration
-    net = feedforwardnet;
+        net.trainParam.epochs = 100;
+        net.trainParam.mu = 0.003;
+        net.trainParam.mu_dec = 0.01;
+        net.trainParam.mu_inc = 7;
+        net.trainParam.mu_max = 10^10;
     
     
-    net.performFcn = 'mse';
-    
-    trainData = TrainData(:,1:amtInputs)';
-    
-    target = TrainData(:,nColumns:nColumns)';
-    
-    %Dividing data for training
-    net.divideFcn = 'divideblock'
-    [trainInd, valInd, testInd] = divideblock(nRows, 0.65,  0.1, 0.25)
-    
-    %training
-    net.trainParam.epochs = 100;
-    net.trainParam.mu = 0.003;
-    net.trainParam.mu_dec = 0.01;
-    net.trainParam.mu_inc = 7;
-    net.trainParam.mu_max = 10^10;
-    net.trainParam.showWindow=0;
-    
-    %set nntraintool window not to appear
-    qtdLayers = 10;
+    5)dividir: 
+        função de treinamento: divideblock
+        quantidades de dados que irão para treinamento, validação e teste
+    6) setar parâmetros de treinamentos:7)qtdLayers = 10;
     netLayers = (1:qtdLayers);
     
     mseVCT = zeros(qtdLayers:1);
