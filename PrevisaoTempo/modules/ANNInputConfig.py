@@ -16,7 +16,7 @@ class ANNInput():
     def open_join_data_frame(self):
         '''abre o df com todos os dados'''
         path = '../data/files/anomalydata/AllAnomalyData.csv'
-        return pd.read_csv(path, sep = ',', index_col = 0)
+        return pd.read_csv(path, sep=r',', index_col=0).round(2)
 
     def get_months(self):
         '''retorna uma lista com um número time_gap de meses que vão de
@@ -41,9 +41,9 @@ class ANNInput():
         self.month_data = pd.DataFrame()
 
     def save(self, folder):
-        filename = '../data/files/anninputs/' + folder + '/' + str(int(self.month)) + '_'+ str(self.time_gap) + '.csv'
+        filename = '../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
         with open(filename, 'w') as file:
-            self.month_data.to_csv(file)
+            self.month_data.to_csv(file, sep = r',')
 
 if __name__ == '__main__':
     keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']

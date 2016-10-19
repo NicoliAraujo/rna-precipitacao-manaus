@@ -36,7 +36,7 @@ class DataPlotting(object):
         #print(month_data_frame)
         plt.clf()
         plt.figure(figsize=(30,15))
-        bar_graph = sns.barplot(x=month_data_frame.index, y=param, data=month_data_frame,palette="Greys")
+        bar_graph = sns.barplot(x=month_data_frame.index, y=param, data=month_data_frame,color="#808080")
         #plt.setp(bar_graph.get_xticklabels(), rotation=45)
         bar_graph.set(xlabel=month_data_frame.index.name, ylabel=param_name)
         sns.plt.savefig('../data/images/anomalydata/' + self.month + param + '.pdf')

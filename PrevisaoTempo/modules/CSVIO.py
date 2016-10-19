@@ -3,10 +3,10 @@
 Created on 26 de set de 2016
 @author: pibic-elloa-nicoli
 '''
-from FromTxtToCSV import MMFromTxtToCSV
+from FromTxtToCSV import MMFromTxtToCSV, Rainfall2008_2015
 from DataStatistics import Anomaly
 import pandas as pd
-from itertools import cycle
+
 
 class JoinDataFrame():
     '''colocar toda a parte de juntar os dataframes aqui:
@@ -47,18 +47,25 @@ class JoinDataFrame():
         #print(namelist)
         df_dict[name].columns = namelist
         return df_dict
+    
+    def set_rainfall_data_frame(self):
+        rainfall_2008_2015_anomaly = Anomaly('rainfall_2008_2015')
+        rainfall_2008_2015_anomaly.set_anomaly_df()
+        self.join_df.update(rainfall_2008_2015_anomaly.anomaly_df)
 
     def join(self):
         '''concatena os dataframes desejados'''
         for name in self.data_sequence_list:
             self.join_df = pd.concat([self.join_df, self.df_dict[name]], axis=1)
-        #print(self.Joindf)
+        self.set_rainfall_data_frame()
+        print(self.join_df)
 
     def set_join_dict(self, data_dict):
         '''formata um dicionário de dataframes com os dados inputados no main'''
+        df_dict = {}
         for key in self.data_dict:
             #print(key)
-            df_dict = {}
+            
             path = data_dict[key][0]
             sep = data_dict[key][1]
             name = data_dict[key][2]
@@ -91,12 +98,12 @@ class JoinDataFrame():
         #self.join(self.dfDict)
 
 if __name__ == '__main__':
-    DATA_DICT = {'rainfall': ['../data/original/other/rainfall.txt', ['\t'], 'rainfall'],
-                 'nino12': ['../data/original/other/nino1+2.txt', ['  '], 'nino12'],
-                 'nino3': ['../data/original/other/nino3.txt', ['  '], 'nino3'],
-                 'nino34':['../data/original/other/nino34.txt', ['  '], 'nino34'],
-                 'nino4': ['../data/original/other/nino4.txt', ['  '], 'nino4'],
-                 'tsa':['../data/original/other/tsa.txt', ['    ', '   '], 'tsa']}
+    DATA_DICT = {'rainfall': ['../data/files/original/other/rainfall.txt', ['\t'], 'rainfall'],
+                 'nino12': ['../data/files/original/other/nino1+2.txt', ['  '], 'nino12'],
+                 'nino3': ['../data/files/original/other/nino3.txt', ['  '], 'nino3'],
+                 'nino34':['../data/files/original/other/nino34.txt', ['  '], 'nino34'],
+                 'nino4': ['../data/files/original/other/nino4.txt', ['  '], 'nino4'],
+                 'tsa':['../data/files/original/other/tsa.txt', ['    ', '   '], 'tsa']}
     DATA_SEQUENCE_LIST = [name for name in DATA_DICT]
     JOIN = JoinDataFrame(DATA_DICT, DATA_SEQUENCE_LIST)
     JOIN.join()

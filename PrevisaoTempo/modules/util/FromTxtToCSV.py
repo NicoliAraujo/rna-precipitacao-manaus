@@ -6,6 +6,7 @@ Created on 12 de set de 2016
 '''
 import numpy as np
 import pandas as pd
+from datetime import date
 
 
 class FromTxtToCSV():
@@ -118,31 +119,89 @@ class MMFromTxtToCSV(FromTxtToCSV):
         #print(self.column_dict)
 
     def save_csv(self, name):
-        newpath = '../data/original/csv/' + name + '.csv'
+        newpath = '../data/files/original/csv/' + name + '.csv'
         with open(newpath, 'w') as file:
             self.data_frame.round(2).to_csv(file)
 
-if __name__ == '__main__':
-    PATH = '../data/original/other/rainfall.txt'
-    MANAUS_MENSAL = MMFromTxtToCSV(PATH)
-    MANAUS_MENSAL.set_csv(['\t'], 'rainfall')
 
-    PATH = '../data/original/other/nino1+2.txt'
-    NINO12 = MMFromTxtToCSV(PATH)
-    NINO12.set_csv(['  '], 'nino12')
+# -*- coding: utf-8 -*-
+'''
+Created on 2 de mai de 2016
 
-    PATH = '../data/original/other/nino3.txt'
-    NINO3 = MMFromTxtToCSV(PATH)
-    NINO3.set_csv(['  '], 'nino3')
+@author: Nicoli Araujo
+'''
 
-    PATH = '../data/original/other/nino34.txt'
-    NINO34 = MMFromTxtToCSV(PATH)
-    NINO34.set_csv(['  '], 'nino34')
+class Rainfall2008_2015(FromTxtToCSV):
+    '''
+    Vem diretamente do chuvaMensal2008-2015.txt original. 
+    Gera um arquivo:
+        Year    rainfall_month
+        1970   29.5
+    2-10-1970   18.2
+    3-10-1970   7
+    4-10-1970   0
+    5-10-1970   3.9
+    6-10-1970   0
+    
+    para cada mês.
+    
+    Não descarta os nans.
+    
 
-    PATH = '../data/original/other/nino4.txt'
-    NINO4 = MMFromTxtToCSV(PATH)
-    NINO4.set_csv(['  '], 'nino4')
+    '''
+    def set_collumns(self):
+        '''cria listas com os dados retirados do arquivo de entrada para ser manipulados posteriormente'''
+        for line in self.old_file_data:
+            cont = 0
+            fim = 0
+            inicio = 0
+            for i in line:
+                fim +=1
+                if (i==";"):
+                    cont+=1
+                    if (cont == 2):
+                        self.col_date.append(line[inicio:fim-1]) 
+                    elif (cont == 4):
+                        self.col_rainfall.append(line[inicio:fim-1])
+                    inicio = fim
 
-    PATH = '../data/original/other/tsa.txt'
-    TSA = MMFromTxtToCSV(PATH)
-    TSA.set_csv(['    ', '   '], 'tsa')
+    def set_data_frame(self):
+        self.data_frame = pd.DataFrame( {self.labelList[0] : self.col_rainfall}, 
+                                        index = pd.to_datetime(self.col_date))
+        self.data_frame =self.data_frame.replace(['', ' '], [np.nan, np.nan])
+        self.data_frame.index.name = 'Date'
+    
+    def set_months_data_frame(self):
+        #print(self.data_frame)
+        indexlist = [i for i in range(2008, 2016)]
+        for key in self.keylist:
+            df_month = self.data_frame.loc[self.data_frame.index.month == int(key)]
+            df_month.rename(columns={'rainfall': 'rainfall_'+key}, inplace=True)
+            df_month.index = indexlist
+            self.months_data_frame = pd.concat([self.months_data_frame, df_month], axis=1)
+            #print(self.months_data_frame)
+    
+    
+    def set_data(self, path):
+        '''
+        pega os dados localizados em path, padroniza e os transfere para um dataFrame
+        '''
+        self.old_file_data = self.get_old_file_data(path)
+        self.remove_first_lines(17)
+        self.set_collumns()
+        self.set_data_frame()
+
+
+    def __init__(self, filepath):
+        '''
+        Constructor
+        '''
+        '''name  =  txt name'''
+        self.keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+        self.labelList = ['rainfall']
+        self.col_date = []
+        self.col_rainfall = []
+        self.set_data(filepath)
+        self.months_data_frame = pd.DataFrame({}, index = [i for i in range(2008,2015)])
+
+        #print(self.months_data_frame)

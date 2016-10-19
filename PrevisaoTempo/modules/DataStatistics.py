@@ -11,7 +11,7 @@ class Anomaly(object):
     classdocs
     '''
     def get_original_data(self):
-        filepath = '../data/original/csv/' + self.name + '.csv'
+        filepath = '../data/files/original/csv/' + self.name + '.csv'
         return pd.read_csv(filepath, sep = r',', index_col = 'Year')
 
     def set_anomaly_df(self):
