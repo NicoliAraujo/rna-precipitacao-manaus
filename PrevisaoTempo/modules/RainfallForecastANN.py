@@ -82,6 +82,7 @@ class RainfallForecastANN(object):
         self.train_data = self.data_set.loc[1950:2001]
         self.val_data = self.data_set.loc[2002:2004]
         self.test_data = self.data_set.loc[2005:2015]
+        self.inputs = self.data_set
         #print(self.train_data, self.val_data, self.test_data)
         
 if __name__ == '__main__':
