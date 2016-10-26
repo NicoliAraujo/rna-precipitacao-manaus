@@ -5,8 +5,8 @@ Created on Oct 17, 2016
 @author: Nicoli
 '''
 import pandas as pd
-import sklearn
-
+import itertools
+from sklearn.neural_network.multilayer_perceptron import MLPRegressor
 class RainfallForecastANN(object):
     '''
     Treinar, testar e validar um conjunto de dados de 1950 a 2015 com as anomalias
@@ -33,7 +33,9 @@ class RainfallForecastANN(object):
     5)dividir:
         função de treinamento: divideblock
         quantidades de dados que irão para treinamento, validação e teste
-    6) setar parâmetros de treinamentos:7)qtdLayers = 10;
+    6) setar parâmetros de treinamentos:
+
+    7)qtdLayers = 10;
     netLayers = (1:qtdLayers);
 
     mseVCT = zeros(qtdLayers:1);
@@ -71,7 +73,37 @@ class RainfallForecastANN(object):
 
     def read_data_set(self, filename):
         return pd.read_csv(filename, sep=r',', index_col=0)
-    
+
+    def set_layers(self, n_layers, n_nodes):
+        '''mudar implementação pra ter layers em função de nlayers
+        '''
+        layers = []
+        nodelist = [i for i in range(1,n_nodes+1)]
+        layers.append(itertools.product(nodelist, nodelist, repeat=1))
+        layers.append(itertools.product(nodelist, repeat=1))
+        '''for i in layers:
+            for j in i:
+                print(j)'''
+        return layers
+    def start_networks(self, n_layers, n_nodes):
+        '''inicializa as redes a ser testadas'''
+        hidden_layers = self.set_layers(n_layers, n_nodes)
+        for layer_setup in hidden_layers:
+            for node_setup in layer_setup:
+                for act in ['logistic', 'tanh']:
+                    for my_alpha in [0.0001, 0.01]:
+                        for my_learning_rate_init in [0.001,0.003]:
+                            for my_validation_fraction in [0.1,0.0462]:
+                                network = MLPRegressor(hidden_layer_sizes=node_setup,
+                                                       activation=act, solver='sgd',
+                                                       alpha=my_alpha,
+                                                       learning_rate_init=my_learning_rate_init,
+                                                       verbose=True, early_stopping=True,
+                                                       validation_fraction=my_validation_fraction)
+                                '''net_dict = {'net': network, 'layer_setup': layer_setup, 'node_setup': node_setup, 
+                                            'act': act, 'alpha': my_alpha, lear}'''
+                                self.neural_networks.append(network)
+
     def __init__(self, filename):
         '''
         Constructor
@@ -79,16 +111,31 @@ class RainfallForecastANN(object):
         self.data_set = self.read_data_set(filename)
         #print(self.data_set)
         #print(self.data_set.dtypes)
-        self.train_data = self.data_set.loc[1950:2001]
-        self.val_data = self.data_set.loc[2002:2004]
-        self.test_data = self.data_set.loc[2005:2015]
-        self.inputs = self.data_set
+        input = self.data_set.columns[1:]
+        output = self.data_set.columns[0]
+        #print(input, output)
+        self.train_data = (self.data_set.loc[1950:2001][input], self.data_set.loc[1950:2001][output])
+        #self.val_data = (self.data_set.loc[2002:2004][input], self.data_set.loc[2002:2004][output])
+        self.test_data = (self.data_set.loc[2002:2015][input], self.data_set.loc[2005:2015][output])
+        self.neural_networks = []
         #print(self.train_data, self.val_data, self.test_data)
-        
+
+    def predict_networks(self):
+        for network in self.neural_networks:
+            result = network.predict(self.test_data[0])
+            #print(result)
+    def fit_networks(self):
+        for network in self.neural_networks:
+            network.fit(self.train_data[0], self.train_data[1])
+            #print(network.score(self.test_data[0], self.test_data[1]))
+
+            #print(network.loss_)
 if __name__ == '__main__':
     MONTH = '01'
     TIME_GAP = '6'
     EXTENSION = 'csv'
     FILENAME = '../data/files/anninputs/anomalyinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
     RFANN = RainfallForecastANN(FILENAME)
-        
+    RFANN.start_networks(2, 7)
+    RFANN.fit_networks()
+    RFANN.predict_networks()
