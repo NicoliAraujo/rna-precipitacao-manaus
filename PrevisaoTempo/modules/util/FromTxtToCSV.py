@@ -119,7 +119,7 @@ class MMFromTxtToCSV(FromTxtToCSV):
         #print(self.column_dict)
 
     def save_csv(self, name):
-        newpath = '../data/files/original/csv/' + name + '.csv'
+        newpath = '../../data/files/original/csv/' + name + '.csv'
         with open(newpath, 'w') as file:
             self.data_frame.round(2).to_csv(file)
 
@@ -164,19 +164,19 @@ class Rainfall2008_2015(FromTxtToCSV):
                     elif (cont == 4):
                         self.col_rainfall.append(line[inicio:fim-1])
                     inicio = fim
-
+        #print(self.col_date, self.col_rainfall)
     def set_data_frame(self):
-        self.data_frame = pd.DataFrame( {self.labelList[0] : self.col_rainfall}, 
+        self.data_frame = pd.DataFrame( {self.labelList[0]: self.col_rainfall}, 
                                         index = pd.to_datetime(self.col_date))
         self.data_frame =self.data_frame.replace(['', ' '], [np.nan, np.nan])
         self.data_frame.index.name = 'Date'
-    
+        print(self.data_frame)
     def set_months_data_frame(self):
         #print(self.data_frame)
         indexlist = [i for i in range(2008, 2016)]
         for key in self.keylist:
             df_month = self.data_frame.loc[self.data_frame.index.month == int(key)]
-            df_month.rename(columns={'rainfall': 'rainfall_'+key}, inplace=True)
+            df_month.rename(columns={'rainfall': key}, inplace=True)
             df_month.index = indexlist
             self.months_data_frame = pd.concat([self.months_data_frame, df_month], axis=1)
             #print(self.months_data_frame)
@@ -199,6 +199,7 @@ class Rainfall2008_2015(FromTxtToCSV):
         '''name  =  txt name'''
         self.keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         self.labelList = ['rainfall']
+        #self.labelList = ['']
         self.col_date = []
         self.col_rainfall = []
         self.set_data(filepath)

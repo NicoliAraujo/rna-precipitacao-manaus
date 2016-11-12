@@ -56,7 +56,6 @@ class DataStatistics(object):
         
         mean = self.getAnnualMean(param)
         
-
         std = self.getAnnualStd(param)
             
         zCritical = stats.norm.ppf(q = 0.95)

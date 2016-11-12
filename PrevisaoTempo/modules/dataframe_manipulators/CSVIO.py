@@ -4,7 +4,7 @@ Created on 26 de set de 2016
 @author: pibic-elloa-nicoli
 '''
 from FromTxtToCSV import MMFromTxtToCSV, Rainfall2008_2015
-from DataStatistics import Anomaly
+from df_statistics.DataStatistics import Anomaly
 import pandas as pd
 
 
@@ -17,7 +17,7 @@ class JoinDataFrame():
     5) salvar
     '''
 
-    def set_original(self, path, sep_list, name):
+    def set_txt_original(self, path, sep_list, name):
         ''' '''
         parser_txt_csv = MMFromTxtToCSV(path)
         parser_txt_csv.set_csv(sep_list, name)
@@ -48,16 +48,16 @@ class JoinDataFrame():
         df_dict[name].columns = namelist
         return df_dict
     
-    def set_rainfall_data_frame(self):
+    '''def set_rainfall_data_frame(self):
         rainfall_2008_2015_anomaly = Anomaly('rainfall_2008_2015')
         rainfall_2008_2015_anomaly.set_anomaly_df()
         self.join_df.update(rainfall_2008_2015_anomaly.anomaly_df)
-
+'''
     def join(self):
         '''concatena os dataframes desejados'''
         for name in self.data_sequence_list:
             self.join_df = pd.concat([self.join_df, self.df_dict[name]], axis=1)
-        self.set_rainfall_data_frame()
+        #self.set_rainfall_data_frame()
         print(self.join_df)
 
     def set_join_dict(self, data_dict):
@@ -66,14 +66,15 @@ class JoinDataFrame():
         for key in self.data_dict:
             #print(key)
             
-            path = data_dict[key][0]
-            sep = data_dict[key][1]
-            name = data_dict[key][2]
+            path = data_dict[key]
+            sep = r','
+            name = key
             #print(path, sep, name)
-            #1) pegar os original
-            data_frame = self.set_original(path, sep, name)
+            #1) pegar os csv original
+            data_frame = pd.read_csv(path, sep, index_col=0)
+            print(key, data_frame)
             #)setar anomalias
-            data_frame = self.set_anomalies(name)
+            #data_frame = self.set_anomalies(name)
             #3)setar anos
             data_frame = self.set_years(data_frame, 1950, 2015)
 
@@ -84,28 +85,31 @@ class JoinDataFrame():
         #print(self.dfDict)
     def save_join(self):
         '''salva o df gerado em um csv'''
-        with open('../data/files/anomalydata/AllAnomalyData.csv', 'w') as file:
+        with open('../../data/files/original/AllData.csv', 'w') as file:
             self.join_df.to_csv(file)
 
     def __init__(self, data_dict, data_sequence_list):
         self.data_dict = data_dict
         self.data_sequence_list = data_sequence_list
+        #print(self.data_sequence_list)
         self.df_dict = self.set_join_dict(self.data_dict)
-        #print(self.dfDict[])
+        #print(self.df_dict)
         #print(self.dfDict['rainfall'].columns)
         #print(self.dfDict['rainfall'])
         self.join_df = pd.DataFrame()
         #self.join(self.dfDict)
 
 if __name__ == '__main__':
-    DATA_DICT = {'rainfall': ['../data/files/original/other/rainfall.txt', ['\t'], 'rainfall'],
-                 'nino12': ['../data/files/original/other/nino1+2.txt', ['  '], 'nino12'],
-                 'nino3': ['../data/files/original/other/nino3.txt', ['  '], 'nino3'],
-                 'nino34':['../data/files/original/other/nino34.txt', ['  '], 'nino34'],
-                 'nino4': ['../data/files/original/other/nino4.txt', ['  '], 'nino4'],
-                 'tsa':['../data/files/original/other/tsa.txt', ['    ', '   '], 'tsa']}
-    DATA_SEQUENCE_LIST = [name for name in DATA_DICT]
+    DATA_DICT = {'rainfall':'../../data/files/original/csv/rainfall_1925_2015.csv',
+                 #'rainfall2008_2015': ['../../data/files/original/other/chuvaMensal2008_2015.txt', ['\t'], 'rainfall2008_2015'],
+                 'nino12': '../../data/files/original/csv/nino12.csv',
+                 'nino3': '../../data/files/original/csv/nino3.csv', 
+                 'nino34':'../../data/files/original/csv/nino34.csv',
+                 'nino4': '../../data/files/original/csv/nino4.csv',
+                 'tsa':'../../data/files/original/csv/tsa.csv'}
+    DATA_SEQUENCE_LIST = ['rainfall', 'nino12', 'nino3', 'nino34', 'nino4', 'tsa']
     JOIN = JoinDataFrame(DATA_DICT, DATA_SEQUENCE_LIST)
+    
     JOIN.join()
     JOIN.save_join()
     

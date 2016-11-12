@@ -15,7 +15,7 @@ class ANNInput():
     '''
     def open_join_data_frame(self):
         '''abre o df com todos os dados'''
-        path = '../data/files/anomalydata/AllAnomalyData.csv'
+        path = '../../data/files/original/AllData.csv'
         return pd.read_csv(path, sep=r',', index_col=0).round(2)
 
     def get_months(self):
@@ -33,7 +33,7 @@ class ANNInput():
         for name in self.join_df.columns:
             if int(name[-2:]) in self.get_months():
                 self.month_data[name] = self.join_df[name]
-
+        
     def __init__(self, month, time_gap):
         self.month = month
         self.time_gap = time_gap
@@ -41,13 +41,19 @@ class ANNInput():
         self.month_data = pd.DataFrame()
 
     def save(self, folder):
-        filename = '../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
+        filename = '../../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
         with open(filename, 'w') as file:
             self.month_data.to_csv(file, sep = r',')
-
+    def normalize_data(self):
+        df = self.join_df
+        for name in self.join_df.columns:
+            if name[:-3] != 'tsa':
+                df[name] = self.join_df[name]/self.join_df[name].sum()
+        self.join_df = df
 if __name__ == '__main__':
     keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
     for month in keylist:
         ANNINPUT = ANNInput(month, 6)
         ANNINPUT.set_month_data()
-        ANNINPUT.save('anomalyinputs')
+        ANNINPUT.normalize_data()
+        ANNINPUT.save('normalizedinputs')

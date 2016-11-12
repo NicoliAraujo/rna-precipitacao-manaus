@@ -17,7 +17,7 @@ class DataPlotting(object):
     classdocs
     '''
     def get_data_frame(self, path):
-        return pd.read_csv(path, sep = r',', index_col = 'Year')
+        return pd.read_csv(path, sep=r',', index_col='Year')
     
     def get_param_mean(self, param):
         return self.month_data_frame[param].mean()
@@ -33,14 +33,14 @@ class DataPlotting(object):
 
     def set_graph(self, param, param_name):
         month_data_frame = self.get_month_data(param)
-        #print(month_data_frame)
+        # print(month_data_frame)
         plt.clf()
-        plt.figure(figsize=(30,15))
-        bar_graph = sns.barplot(x=month_data_frame.index, y=param, data=month_data_frame,color="#808080")
-        #plt.setp(bar_graph.get_xticklabels(), rotation=45)
+        plt.figure(figsize=(30, 15))
+        bar_graph = sns.barplot(x=month_data_frame.index, y=param, data=month_data_frame, color="#808080")
+        # plt.setp(bar_graph.get_xticklabels(), rotation=45)
         bar_graph.set(xlabel=month_data_frame.index.name, ylabel=param_name)
-        sns.plt.savefig('../data/images/anomalydata/' + self.month + param + '.pdf')
-        sns.plt.savefig('../data/images/anomalydata/' + self.month + param + '.png')
+        sns.plt.savefig('../../data/images/anomalydata/' + self.month + param + '.pdf')
+        sns.plt.savefig('../../data/images/anomalydata/' + self.month + param + '.png')
         plt.close()
     
     def __init__(self, month, path):
@@ -48,7 +48,7 @@ class DataPlotting(object):
         self.data_frame = self.get_data_frame(path)
 
 if __name__ == '__main__':
-    PATH = '../data/files/anomalydata/AllAnomalyData.csv'
+    PATH = '../../data/files/anomalydata/AllAnomalyData.csv'
     PLT = DataPlotting('01', PATH)
     PLT.set_graph('rainfall', 'Rainfall')
     PLT.set_graph('tsa', 'TSA')

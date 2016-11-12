@@ -7,10 +7,10 @@ Created on 31 de out de 2016
 import pandas as pd
 import scipy.stats as stats
 import itertools
-from sklearn.neural_network.multilayer_perceptron import MLPRegressor
+from sklearn.neural_network.multilayer_perceptron import MLPClassifier
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import mean_absolute_error as mae
-class RainfallRegressor(object):
+class RainfallClassifier(object):
     '''
     Treinar, testar e validar um conjunto de dados de 1950 a 2015 com as anomalias
     dos dados mensais de precipitação, tsa, e ninos. O output deve ser o volume de
@@ -98,7 +98,7 @@ class RainfallRegressor(object):
                     for my_alpha in [0.0001, 0.01]:
                         for my_learning_rate_init in [0.001,0.003]:
                             for my_validation_fraction in [0.1,0.0462]:
-                                network = MLPRegressor(hidden_layer_sizes=node_setup,
+                                network = MLPClassifier(hidden_layer_sizes=node_setup,
                                                        activation=act, solver='sgd',
                                                        alpha=my_alpha,
                                                        learning_rate_init=my_learning_rate_init,
@@ -108,9 +108,33 @@ class RainfallRegressor(object):
                                 neural_networks.append(network)
         return neural_networks
     
+    def classify_outputs(self, data_set, output_col):
+        #normalizar dados
+        #print(data_set)
+        output_mean = data_set[output_col].mean()
+        new_data_set = data_set.copy()
+        new_data_set[output_col][data_set[output_col] > output_mean] = 1
+        #print(new_data_set[output_col], '\n', output_mean)
+        new_data_set[output_col][data_set[output_col] < output_mean] = -1
+        #print(new_data_set[output_col], '\n', output_mean)
+        new_data_set[output_col][data_set[output_col] == output_mean] = 0
+        #print(new_data_set[output_col], '\n', output_mean)
+        
+        return new_data_set
     
-    
-
+    def normalize_data_set(self, data_set, output_col):
+        #normalizar dados
+        #print(data_set)
+        #output_mean = data_set[output_col].mean()
+        new_data_set = data_set.copy()
+        new_data_set = (data_set - data_set.mean())/data_set.mean()
+        #print(new_data_set[output_col], '\n', output_mean)
+        #new_data_set[output_col][data_set[output_col] < output_mean] = -1
+        #print(new_data_set[output_col], '\n', output_mean)
+        #new_data_set[output_col][data_set[output_col] == output_mean] = 0
+        #print(new_data_set[output_col], '\n', output_mean)
+        
+        return new_data_set
     
     def __init__(self, filename, n_layers, n_nodes):
         '''
@@ -121,7 +145,7 @@ class RainfallRegressor(object):
         my_input = self.data_set.columns[1:]
         output = self.data_set.columns[0]
 
-        
+        self.data_set = self.classify_outputs(self.data_set, output)
         #print(self.data_set.corr())
         #print(input, output)
 
@@ -136,7 +160,7 @@ class RainfallRegressor(object):
 
     def predict_networks(self):
         '''não retorna valores corretos'''
-        filename = '../../data/files/ann_output_files/' + MONTH+ '_' + TIME_GAP + '_regression_dataset_normalizado' + '.txt'
+        filename = '../../data/files/ann_output_files/' + MONTH+ '_' + TIME_GAP + '_outputs_classificados' + '.txt'
         with open(filename, 'w') as file:
             for network in self.neural_networks:
                 file.write(str(network))
@@ -163,8 +187,8 @@ if __name__ == '__main__':
     MONTH = '01'
     TIME_GAP = '6'
     EXTENSION = 'csv'
-    FILENAME = '../../data/files/anninputs/normalizedinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
-    RFANN = RainfallRegressor(FILENAME, n_layers=2, n_nodes=7)
+    FILENAME = '../../data/files/anninputs/anomalyinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
+    RFANN = RainfallClassifier(FILENAME, n_layers=2, n_nodes=7)
     RFANN.fit_networks()
     RFANN.predict_networks()
     

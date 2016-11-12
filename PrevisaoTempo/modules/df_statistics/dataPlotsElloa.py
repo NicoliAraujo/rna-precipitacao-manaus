@@ -14,16 +14,16 @@ print(ourData)
 print(ourData["PRECIPITACAO"])
 
 # Strip plot da temperatura maxima versus rainfall 
-#sns.stripplot(y="AHT", x="rainfall", data=ourData, jitter=True,palette="Greys")#
-#sns.plt.show()
+# sns.stripplot(y="AHT", x="rainfall", data=ourData, jitter=True,palette="Greys")#
+# sns.plt.show()
 
 # Boxplot de AHT versus rainfall -- Já no artigo
-sns.boxplot(x="PRECIPITACAO", y="AHT", hue="PRECIPITACAO", data=ourData,palette="Greys");
+sns.boxplot(x="PRECIPITACAO", y="AHT", hue="PRECIPITACAO", data=ourData, palette="Greys");
 sns.plt.show()
 
 # Boxplot dos dados de entrada -- Já no artigo!
-#sns.boxplot(ourData[['AHT','ALT']],palette="Greys")
-#sns.plt.show()
+# sns.boxplot(ourData[['AHT','ALT']],palette="Greys")
+# sns.plt.show()
 
 # Explorando rainfall
 '''
@@ -35,9 +35,9 @@ sns.tsplot(rainfallLastYear)
 sns.plt.show()'''
 
 # Teste Chi-Quadrado para Rainfall
-#import scipy.stats as scp
-#observed = [5889, 5830]
-#print(scp.chisquare(observed))
+# import scipy.stats as scp
+# observed = [5889, 5830]
+# print(scp.chisquare(observed))
 '''
 # Stem plot do último mês de chuva
 ourData = pd.read_csv("text_data4.txt", sep=r"\s+")
