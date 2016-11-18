@@ -10,6 +10,62 @@ import itertools
 from sklearn.neural_network.multilayer_perceptron import MLPRegressor
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import mean_absolute_error as mae
+
+
+class ResultNet():
+    def __init__(self, net, train_data, test_data):
+        self.net = net
+        self.mse_train = train_data
+        self.mse_test = test_data
+        self.mape_test = test_data
+
+    @property
+    def net(self):
+        return self.__net
+
+    @net.setter
+    def net(self, net):
+        if hasattr(net, 'coefs_') == True:
+            self.__net = net
+        else:
+            print("A rede ainda não foi treinada!")
+
+    @property
+    def mse_train(self):
+        return self.__mse_train
+
+    @mse_train.setter
+    def mse_train(self, train_data) :
+        train_expected, train_obtained = train_data
+        self.__mse_train = mse(train_expected, train_obtained)
+
+    @property
+    def mse_test(self):
+        return self.__mse_test
+
+    @mse_test.setter
+    def mse_test(self, test_data):
+        test_expected, test_obtained = test_data
+        self.__mse_test = mse(test_expected, test_obtained)
+
+    @property
+    def mape_test(self):
+        return self.__mape_test
+
+    @mape_test.setter
+    def mape_test(self, test_data):
+        test_expected, test_obtained = test_data
+        self.__mape_test = 100*mae(test_expected, test_obtained)
+
+    def __repr__(self):
+        return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
+    
+    def __lt__(self, other):
+        if self.mape_test < other.mape_test:
+            return True
+        else:
+            return False
+        
 class RainfallRegressor(object):
     '''
     Treinar, testar e validar um conjunto de dados de 1950 a 2015 com as anomalias
@@ -75,7 +131,7 @@ class RainfallRegressor(object):
     '''
 
     def read_data_set(self, filename):
-        return pd.read_csv(filename, sep=r',', index_col=0)
+        return pd.read_csv(filename, sep=r',', index_col=0).round(5)
 
     def set_layers(self, n_layers, n_nodes):
         '''mudar implementação pra ter layers em função de nlayers
@@ -107,11 +163,7 @@ class RainfallRegressor(object):
                                                        max_iter=2000)
                                 neural_networks.append(network)
         return neural_networks
-    
-    
-    
 
-    
     def __init__(self, filename, n_layers, n_nodes):
         '''
         Constructor
@@ -121,7 +173,6 @@ class RainfallRegressor(object):
         my_input = self.data_set.columns[1:]
         output = self.data_set.columns[0]
 
-        
         #print(self.data_set.corr())
         #print(input, output)
 
@@ -132,25 +183,28 @@ class RainfallRegressor(object):
                           'output': self.data_set.loc[2002:2015][output]}
         #print(self.test_data)
         self.neural_networks = self.start_networks(n_layers, n_nodes)
+        self.result_networks = []
         #print(self.train_data, self.test_data)
 
     def predict_networks(self):
         '''não retorna valores corretos'''
-        filename = '../../data/files/ann_output_files/' + MONTH+ '_' + TIME_GAP + '_regression_dataset_normalizado' + '.txt'
+        for network in self.neural_networks:
+
+            result_train_data = network.predict(self.train_data['input'])
+            result_test_data = network.predict(self.test_data['input'])
+
+            result_net = ResultNet(network, 
+                                   (self.train_data['output'], result_train_data),
+                                   (self.test_data['output'], result_test_data))
+            self.result_networks.append(result_net)
+
+    def save_networks(self, month, time_gap, etc=''):
+        filename = '../../data/files/ann_output_files/' + month+ '_' + time_gap + '_regression_dataset_normalized' + etc + '.txt'
+        self.result_networks = sorted(self.result_networks, key= lambda ResultNet: ResultNet.mape_test)
+
         with open(filename, 'w') as file:
-            for network in self.neural_networks:
-                file.write(str(network))
-                #mse para treinamento
-                result = network.predict(self.train_data['input'])
-                #print(result, '\n', self.train_data['output'], self.test_data['output'])
-                file.write('MSE treinamento: ' + str(mse(self.train_data['output'], result)) + '\n')
-                #mse para teste
-                result = network.predict(self.test_data['input'])
-                #print(self.test_data['output'], '\n', result)
-                file.write('MSE teste: ' + str(mse(self.test_data['output'], result)) + '\n')
-                #mape para teste
-                result = network.predict(self.test_data['input'])
-                file.write('MAPE teste: ' + str(100*mae(self.test_data['output'], result)) + '%' + '\n')
+            for result_network in self.result_networks:
+                file.write(str(result_network))
 
     def fit_networks(self):
         for network in self.neural_networks:
@@ -158,7 +212,7 @@ class RainfallRegressor(object):
             #print(network.score(self.test_data[0], self.test_data[1]))
 
             #print(network.loss_)
-    
+
 if __name__ == '__main__':
     MONTH = '01'
     TIME_GAP = '6'
@@ -167,4 +221,5 @@ if __name__ == '__main__':
     RFANN = RainfallRegressor(FILENAME, n_layers=2, n_nodes=7)
     RFANN.fit_networks()
     RFANN.predict_networks()
+    RFANN.save_networks(MONTH, TIME_GAP)
     

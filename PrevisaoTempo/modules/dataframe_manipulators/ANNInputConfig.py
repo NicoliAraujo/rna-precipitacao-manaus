@@ -42,14 +42,20 @@ class ANNInput():
 
     def save(self, folder):
         filename = '../../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
+        #print(self.month_data)
         with open(filename, 'w') as file:
             self.month_data.to_csv(file, sep = r',')
     def normalize_data(self):
-        df = self.join_df
-        for name in self.join_df.columns:
+        df = self.month_data
+        for name in self.month_data.columns:
+            #print(name[:-3])
             if name[:-3] != 'tsa':
-                df[name] = self.join_df[name]/self.join_df[name].sum()
-        self.join_df = df
+                #print(self.join_df[name].sum())
+                #print(df[name])
+                df[name] = self.month_data[name]/self.month_data[name].sum()
+                #print(df[name])
+                self.month_data = df
+        #print(self.join_df)
 if __name__ == '__main__':
     keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
     for month in keylist:
