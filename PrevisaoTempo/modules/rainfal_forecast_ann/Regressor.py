@@ -58,7 +58,7 @@ class ResultNet():
         self.__mape_test = 100*mae(test_expected, test_obtained)
 
     def __repr__(self):
-        return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
+        return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
     
     def __lt__(self, other):
         if self.mape_test < other.mape_test:
@@ -140,9 +140,6 @@ class RainfallRegressor(object):
         nodelist = [i for i in range(1,n_nodes+1)]
         layers.append(itertools.product(nodelist, nodelist, repeat=1))
         layers.append(itertools.product(nodelist, repeat=1))
-        '''for i in layers:
-            for j in i:
-                print(j)'''
         return layers
     def start_networks(self, n_layers, n_nodes):
         '''inicializa as redes a ser testadas'''
