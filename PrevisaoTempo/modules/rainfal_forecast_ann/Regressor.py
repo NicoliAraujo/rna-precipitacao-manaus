@@ -11,7 +11,42 @@ from sklearn.neural_network.multilayer_perceptron import MLPRegressor
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import mean_absolute_error as mae
 
+class ResultDataSet():
+    def __init__(self, result_net_list):
+        self.result_net_list = result_net_list
+        self.df = pd.DataFrame()
 
+    def set_df(self):
+        '''fa = funçao de ativação
+        ta = taxa de aprendizado
+        fv= fração de validação
+        '''
+        dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [], 
+                'TA': [], 'FV': [], 'MSE Treinamento': [],
+                'MSE Teste': [], 'MAPE Teste': [], 'Acurácia': []}
+        for result_net in self.result_net_list:
+            #print(result_net.net.hidden_layer_sizes)
+            dict_net['Arquitetura'].append(str(result_net.net.hidden_layer_sizes))
+            dict_net['FA'].append(result_net.net.activation)
+            dict_net['Alpha'].append(result_net.net.alpha)
+            dict_net['TA'].append(result_net.net.learning_rate_init)
+            dict_net['FV'].append(result_net.net.validation_fraction)
+            dict_net['MSE Treinamento'].append(round(result_net.mse_train,5))
+            dict_net['MSE Teste'].append(round(result_net.mse_test,5))
+            dict_net['MAPE Teste'].append(round(result_net.mape_test, 3))
+            dict_net['Acurácia'].append(round(100-result_net.mape_test, 3))
+        self.df = pd.DataFrame(dict_net)
+        #print(self.df)
+        self.df.sort_values(by='MAPE Teste', ascending=True, inplace=True)
+        self.df.index = [i for i in range(1, len(self.df)+1)]
+        cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MSE Treinamento', 
+                'MSE Teste', 'MAPE Teste',  'Acurácia']
+        self.df = self.df[cols]
+        print(self.df)
+        
+    def save_results(self, filename):
+        with open(filename, 'w') as file:
+            self.df.to_csv(filename)
 class ResultNet():
     def __init__(self, net, train_data, test_data):
         self.net = net
@@ -58,7 +93,7 @@ class ResultNet():
         self.__mape_test = 100*mae(test_expected, test_obtained)
 
     def __repr__(self):
-        return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
+        return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
     
     def __lt__(self, other):
         if self.mape_test < other.mape_test:
@@ -140,9 +175,6 @@ class RainfallRegressor(object):
         nodelist = [i for i in range(1,n_nodes+1)]
         layers.append(itertools.product(nodelist, nodelist, repeat=1))
         layers.append(itertools.product(nodelist, repeat=1))
-        '''for i in layers:
-            for j in i:
-                print(j)'''
         return layers
     def start_networks(self, n_layers, n_nodes):
         '''inicializa as redes a ser testadas'''
@@ -199,12 +231,11 @@ class RainfallRegressor(object):
             self.result_networks.append(result_net)
 
     def save_networks(self, month, time_gap, etc=''):
-        filename = '../../data/files/ann_output_files/' + month+ '_' + time_gap + '_regression_dataset_normalized' + etc + '.txt'
-        self.result_networks = sorted(self.result_networks, key= lambda ResultNet: ResultNet.mape_test)
-
-        with open(filename, 'w') as file:
-            for result_network in self.result_networks:
-                file.write(str(result_network))
+        filename = '../../data/files/ann_output_files/' + month+ '_' + time_gap + '_regression_dataset_normalized' + etc + '.csv'
+        result_data_set = ResultDataSet(self.result_networks)
+        result_data_set.set_df()
+        result_data_set.save_results(filename)
+       
 
     def fit_networks(self):
         for network in self.neural_networks:
