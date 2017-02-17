@@ -47,6 +47,7 @@ class DataPlotting(object):
         self.month = month
         self.data_frame = self.get_data_frame(path)
 
+    
 if __name__ == '__main__':
     PATH = '../../data/files/anomalydata/AllAnomalyData.csv'
     PLT = DataPlotting('01', PATH)
