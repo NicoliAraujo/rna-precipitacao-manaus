@@ -3,7 +3,7 @@ Created on 18 de out de 2016
 
 @author: pibic-elloa-nicoli
 '''
-from FromTxtToCSV import Rainfall2008_2015
+from modules.util.FromTxtToCSV import Rainfall2008_2015
 import pandas as pd
 
 if __name__ == '__main__':

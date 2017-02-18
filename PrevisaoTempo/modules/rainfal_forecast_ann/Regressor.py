@@ -21,9 +21,11 @@ class ResultDataSet():
         ta = taxa de aprendizado
         fv= fração de validação
         '''
+        #dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [], 
+        #        'TA': [], 'FV': [], 'MSE Treinamento': [],
+        #        'MSE Teste': [], 'MAPE Teste': [], 'Acurácia': []}
         dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [], 
-                'TA': [], 'FV': [], 'MSE Treinamento': [],
-                'MSE Teste': [], 'MAPE Teste': [], 'Acurácia': []}
+                'TA': [], 'FV': [], 'MAPE Teste': [], 'Acurácia': []}
         for result_net in self.result_net_list:
             #print(result_net.net.hidden_layer_sizes)
             dict_net['Arquitetura'].append(str(result_net.net.hidden_layer_sizes))
@@ -31,18 +33,19 @@ class ResultDataSet():
             dict_net['Alpha'].append(result_net.net.alpha)
             dict_net['TA'].append(result_net.net.learning_rate_init)
             dict_net['FV'].append(result_net.net.validation_fraction)
-            dict_net['MSE Treinamento'].append(round(result_net.mse_train,5))
-            dict_net['MSE Teste'].append(round(result_net.mse_test,5))
+            #dict_net['MSE Treinamento'].append(round(result_net.mse_train,5))
+            #dict_net['MSE Teste'].append(round(result_net.mse_test,5))
             dict_net['MAPE Teste'].append(round(result_net.mape_test, 3))
             dict_net['Acurácia'].append(round(100-result_net.mape_test, 3))
         self.df = pd.DataFrame(dict_net)
         #print(self.df)
         self.df.sort_values(by='MAPE Teste', ascending=True, inplace=True)
         self.df.index = [i for i in range(1, len(self.df)+1)]
-        cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MSE Treinamento', 
-                'MSE Teste', 'MAPE Teste',  'Acurácia']
+        #cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MSE Treinamento', 
+        #        'MSE Teste', 'MAPE Teste',  'Acurácia']
+        cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MAPE Teste',  'Acurácia']
         self.df = self.df[cols]
-        print(self.df)
+        #print(self.df)
         
     def save_results(self, filename):
         with open(filename, 'w') as file:
@@ -107,7 +110,7 @@ class RainfallRegressor(object):
     '''
 
     def read_data_set(self, filename):
-        return pd.read_csv(filename, sep=r',', index_col=0).round(5)
+        return pd.read_csv(filename, sep=r',', index_col=0)
 
     def set_layers(self, n_layers, n_nodes):
         '''mudar implementação pra ter layers em função de nlayers
@@ -128,12 +131,12 @@ class RainfallRegressor(object):
                         for my_learning_rate_init in [0.001,0.003]:
                             for my_validation_fraction in [0.1,0.0462]:
                                 network = MLPRegressor(hidden_layer_sizes=node_setup,
-                                                       activation=act, solver='sgd',
+                                                       activation=act, solver='lbfgs',
                                                        alpha=my_alpha,
                                                        learning_rate_init=my_learning_rate_init,
                                                        verbose=False, early_stopping=True,
                                                        validation_fraction=my_validation_fraction,
-                                                       max_iter=2000)
+                                                       max_iter=200000)
                                 neural_networks.append(network)
         return neural_networks
 
@@ -185,6 +188,66 @@ class RainfallRegressor(object):
 
             #print(network.loss_)
 
+class Predict_Best():
+    def read_data_set(self, filename):
+        return pd.read_csv(filename, sep=r',', index_col=0)
+    
+    def __init__(self, result_nets_list, test_data, month, num_nets):
+        self.result_nets_list = result_nets_list
+        self.test_data = test_data
+        self.month = month
+        self.predict_df = pd.DataFrame()
+        
+        self.num_nets = num_nets
+        self.start_predict_df_seaborn()
+        
+    def start_predict_df_seaborn(self):
+        self.predict_df_seaborn = pd.DataFrame(self.test_data['output'])
+        self.predict_df_seaborn.index = [i for i in range(len(self.test_data['output']))]
+        self.predict_df_seaborn.rename(columns = {'rainfall_'+str(self.month):'Norm'}, inplace = True)
+        self.predict_df_seaborn['Year'] = pd.Series(self.test_data['output'].index)
+        self.predict_df_seaborn['from'] = 'y'
+        
+    def set_predict_df(self):
+        
+        self.predict_df['y'] = self.test_data['output']
+        for i in range(self.num_nets):
+            self.predict_df['net_'+ str(i)] = self.result_nets_list[i].net.predict(self.test_data['input'])
+            self.predict_df.index = self.test_data['output'].index
+        #print(self.predict_df)
+ 
+    def set_predict_df_seaborn(self):
+        for i in range(self.num_nets):
+            results_predict = pd.DataFrame(self.result_nets_list[i].net.predict(self.test_data['input']))
+            results_predict.rename(columns = {0:'Norm'}, inplace = True)
+            results_predict['Year'] = pd.Series(self.test_data['output'].index)
+            results_predict['from'] = 'net_'+str(i)
+            self.predict_df_seaborn = self.predict_df_seaborn.append(results_predict)
+        #print(self.predict_df_seaborn)
+        
+    def save_predict_df(self, filename):
+        with open(filename, 'w') as file:
+            self.predict_df_seaborn.to_csv(filename)
+            
+    def save_predict_df_seaborn(self, filename):
+        with open(filename, 'w') as file:
+            self.predict_df_seaborn.to_csv(filename)
+
+    def start_predict_dfs_volume(self, filename):
+        self.source_df_sum = self.read_data_set(filename).sum()
+        
+        self.predict_df = self.predict_df*self.source_df_sum['rainfall_'+self.month]
+        self.predict_df_seaborn['Norm'] = self.predict_df_seaborn['Norm']*self.source_df_sum['rainfall_'+self.month]
+        
+    def save_predict_df_volume(self, filename_seaborn, filename):
+        with open(filename_seaborn, 'w') as file:
+
+            self.predict_df_seaborn.to_csv(filename_seaborn)
+        with open(filename, 'w') as file:
+            
+            self.predict_df.to_csv(filename)
+    
+        
 if __name__ == '__main__':
     MONTH = '01'
     TIME_GAP = '6'
@@ -195,3 +258,21 @@ if __name__ == '__main__':
     RFANN.predict_networks()
     RFANN.save_networks(MONTH, TIME_GAP)
     
+    RESULT_NETS_CSV = '../../data/files/ann_output_files/' + MONTH+ '_' + TIME_GAP + '_regression_dataset_normalized.csv'
+    
+    PB = Predict_Best(RFANN.result_networks, RFANN.test_data, MONTH, num_nets=5)
+    PB.set_predict_df()
+    PB.set_predict_df_seaborn()
+    FILENAME_PREDICT = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_regression_normalized.csv'
+    FILENAME_PREDICT_SEABORN = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_regression_normalized_seaborn.csv'
+    PB.save_predict_df_seaborn(FILENAME_PREDICT_SEABORN)
+    PB.save_predict_df(FILENAME_PREDICT)
+    
+    FILENAME_SOMA_SEABORN = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_regression_volume_seaborn.csv'
+    FILENAME_SOMA = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_regression_volume.csv'
+    
+    FILENAME_SOURCE_SOMA = '../../data/files/original/AllData.csv'
+    
+    
+    PB.start_predict_dfs_volume(FILENAME_SOURCE_SOMA)
+    PB.save_predict_df_volume(FILENAME_SOMA_SEABORN, FILENAME_SOMA)
