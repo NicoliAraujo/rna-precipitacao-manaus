@@ -42,11 +42,19 @@ class ANNInput():
 
     def save(self, folder):
         filename = '../../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
+        filename_sum = '../../data/files/anninputs/somas/' + self.month + '_'+ str(self.time_gap) + 'soma.csv'
         #print(self.month_data)
         with open(filename, 'w') as file:
             self.month_data.to_csv(file, sep = r',')
+        with open(filename_sum, 'w') as file:
+            #print(self.month_data.sum())
+            self.df_sum.to_csv(file, sep=r',')
+            print(self.df_sum)
     def normalize_data(self):
         df = self.month_data
+        
+        self.df_sum = pd.DataFrame()
+        self.df_sum = self.month_data.sum()
         for name in self.month_data.columns:
             #print(name[:-3])
             if name[:-3] != 'tsa':
@@ -56,6 +64,8 @@ class ANNInput():
                 #print(df[name])
                 self.month_data = df
         #print(self.join_df)
+        
+                
 if __name__ == '__main__':
     keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
     for month in keylist:

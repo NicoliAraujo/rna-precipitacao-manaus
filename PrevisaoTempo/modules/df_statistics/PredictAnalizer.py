@@ -28,18 +28,21 @@ class Predict_Best():
         self.test_data = {'input': self.data_set.loc[2002:2015][my_input],
                           'output': self.data_set.loc[2002:2015][output]}
         
-        self.start_predict_df(month)
+        self.predict_df = pd.DataFrame()
+        
+        self.start_predict_df_seaborn(month)
         self.result_predict_list = []
         self.best_nets = self.start_nets(num_nets)
+    
     def read_data_set(self, filename):
         return pd.read_csv(filename, sep=r',', index_col=0).round(5)
     
-    def start_predict_df(self, month):
-        self.predict_df = pd.DataFrame(self.test_data['output'])
-        self.predict_df.index = [i for i in range(len(self.test_data['output']))]
-        self.predict_df.rename(columns = {'rainfall_'+str(month):'Anomaly'}, inplace = True)
-        self.predict_df['Year'] = pd.Series(self.test_data['output'].index)
-        self.predict_df['from'] = 'y'
+    def start_predict_df_seaborn(self, month):
+        self.predict_df_seaborn = pd.DataFrame(self.test_data['output'])
+        self.predict_df_seaborn.index = [i for i in range(len(self.test_data['output']))]
+        self.predict_df_seaborn.rename(columns = {'rainfall_'+str(month):'Anomaly'}, inplace = True)
+        self.predict_df_seaborn['Year'] = pd.Series(self.test_data['output'].index)
+        self.predict_df_seaborn['from'] = 'y'
     
     def start_nets(self, num_nets):
         best_nets=[]
@@ -68,21 +71,35 @@ class Predict_Best():
     
     def set_predict_df(self):
         i=1
+        self.predict_df['y'] = self.test_data['output']
+        for net in self.result_predict_list:
+            self.predict_df['net_'+ str(i)] = net
+            i+=1
+        #print(self.test_data['output'][2002,2015])
+        
+        self.predict_df.index = self.test_data['output'].index
+    
+    def set_predict_df_seaborn(self):
+        i=1
         for net in self.result_predict_list:
             net = pd.DataFrame(net)
             net.rename(columns = {0:'Anomaly'}, inplace = True)
             net['Year'] = pd.Series(self.test_data['output'].index)
             net['from'] = 'net_'+str(i)
             #print(net)
-            self.predict_df = self.predict_df.append(net, ignore_index=True)
+            self.predict_df_seaborn = self.predict_df_seaborn.append(net, ignore_index=True)
             i+=1
         
-        self.predict_df['Anomaly']*=100
-        print(self.predict_df)
+        #self.predict_df_seaborn['Anomaly']*=100
+        print(self.predict_df_seaborn)
         
-    def save_df(self, filename):
+    def save_predict_df(self, filename):
         with open(filename, 'w') as file:
-            self.predict_df.to_csv(filename)
+            self.predict_df_seaborn.to_csv(filename)
+            
+    def save_predict_df_seaborn(self, filename):
+        with open(filename, 'w') as file:
+            self.predict_df_seaborn.to_csv(filename)
             
 if __name__ == '__main__':
     MONTH = '01'
@@ -94,5 +111,8 @@ if __name__ == '__main__':
     PB = Predict_Best(RESULT_NETS_CSV, DATA_SET_CSV, 5, MONTH)
     PB.train_predict()
     PB.set_predict_df()
-    FILENAME = '../../data/files/ann_output_files/predict_comp' + MONTH + '_' + TIME_GAP + '_regression_normalized.csv'
-    PB.save_df(FILENAME)
+    PB.set_predict_df_seaborn()
+    FILENAME_PREDICT = '../../data/files/ann_output_files/predict_comp' + MONTH + '_' + TIME_GAP + '_regression_normalized.csv'
+    FILENAME_PREDICT_SEABORN = '../../data/files/ann_output_files/predict_comp' + MONTH + '_' + TIME_GAP + '_regression_normalized_seaborn.csv'
+    PB.save_predict_df_seaborn(FILENAME_PREDICT_SEABORN)
+    PB.save_predict_df(FILENAME_PREDICT)

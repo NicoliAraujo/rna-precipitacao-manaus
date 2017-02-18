@@ -31,6 +31,7 @@ class Predict_Best():
         
         self.result_predict_list = []
         self.best_nets = self.start_nets(num_nets)
+    
     def read_data_set(self, filename):
         return pd.read_csv(filename, sep=r',', index_col=0).round(5)
     
