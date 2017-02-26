@@ -93,8 +93,9 @@ class ResultNet():
     @mape_test.setter
     def mape_test(self, test_data):
         test_expected, test_obtained = test_data
-        self.__mape_test = 100*mae(test_expected, test_obtained)
-
+        dif = abs(test_expected - abs(test_obtained))/test_expected
+        self.__mape_test = 100/len(dif) * dif.sum()
+        
     def __repr__(self):
         return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
     
@@ -223,8 +224,11 @@ class Predict_Best():
             results_predict['Year'] = pd.Series(self.test_data['output'].index)
             results_predict['from'] = 'net_'+str(i)
             self.predict_df_seaborn = self.predict_df_seaborn.append(results_predict)
-        #print(self.predict_df_seaborn)
-        
+    
+    def save_predict_df_seaborn_anomaly(self, filename):
+        self.predict_df_seaborn_anomaly = self.predict_df_seaborn['Norm']-self.test_data['output'].mean()
+        with open(filename, 'w') as file:
+            self.predict_df_seaborn_anomaly.to_csv(filename)
     def save_predict_df(self, filename):
         with open(filename, 'w') as file:
             self.predict_df_seaborn.to_csv(filename)
@@ -273,6 +277,8 @@ if __name__ == '__main__':
     
     FILENAME_SOURCE_SOMA = '../../data/files/original/AllData.csv'
     
+    FILENAME_SEABORN_ANOMALY = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_regression_anomaly_seaborn.csv'
     
     PB.start_predict_dfs_volume(FILENAME_SOURCE_SOMA)
     PB.save_predict_df_volume(FILENAME_SOMA_SEABORN, FILENAME_SOMA)
+    PB.save_predict_df_seaborn_anomaly(FILENAME_SEABORN_ANOMALY)

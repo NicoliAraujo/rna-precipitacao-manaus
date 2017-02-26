@@ -29,9 +29,10 @@ if __name__ == '__main__':
     EXTENSION = 'csv'
     TYPE1 = 'regression_normalized'
     TYPE2 = 'regression_volume'
+    TYPE3 = 'regression_volume'
     FILENAME_NORM = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE1 + '_seaborn.csv'
     FILENAME_VOLUME = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE2 +'_seaborn.csv'
-    
+    FILENAME_ANOMALY = '../../data/files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE3 +'_seaborn.csv'
     PLOT = ANNPredictPlotting(FILENAME_NORM, TYPE1)
     PLOT = ANNPredictPlotting(FILENAME_VOLUME, TYPE2)
     
