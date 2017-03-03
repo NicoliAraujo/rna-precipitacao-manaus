@@ -9,7 +9,7 @@ from PredictBest import Predict_Best
 
 if __name__ == '__main__':
     MONTH = '01'
-    TIME_GAP = '6'
+    TIME_GAP = '12'
     EXTENSION = 'csv'
     FILENAME = '../../data/files/anninputs/normalizedinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
     RFANN = RainfallRegressor(FILENAME, n_layers=2, n_nodes=7)
