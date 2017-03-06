@@ -52,7 +52,7 @@ def plot_pca(pca_df):
 def read_data_set(filename):
     return pd.read_csv(filename, sep=r',', index_col=0)
 if __name__ == '__main__':
-    PATH_INPUT = '../../data/files/original/AllNormalizedData.csv'
+    PATH_INPUT = '../../data/files/original/AllData.csv'
 #     variable_list = ['rainfall_01', 'rainfall_02', 'rainfall_03', 'rainfall_04',
 #        'rainfall_05', 'rainfall_06', 'rainfall_07', 'rainfall_08',
 #        'rainfall_09', 'rainfall_10', 'rainfall_11', 'rainfall_12', 'nino12_01',
@@ -67,7 +67,7 @@ if __name__ == '__main__':
 #        'nino4_09', 'nino4_10', 'nino4_11', 'nino4_12', 'tsa_01', 'tsa_02',
 #        'tsa_03', 'tsa_04', 'tsa_05', 'tsa_06', 'tsa_07', 'tsa_08', 'tsa_09',
 #        'tsa_10', 'tsa_11', 'tsa_12']
-    variable_list = ['rainfall_01','nino12_01',
+    variable_list = ['nino12_01',
        'nino12_02', 'nino12_03', 'nino12_04', 'nino12_05', 'nino12_06',
        'nino12_07', 'nino12_08', 'nino12_09', 'nino12_10', 'nino12_11',
        'nino12_12', 'nino3_01', 'nino3_02', 'nino3_03', 'nino3_04', 'nino3_05',

@@ -38,7 +38,11 @@ class To_Seaborn():
                 i+=1
         #print(variable_data_set)
         self.plot_grafico(variable_data_set, my_x, my_y, variable)
+<<<<<<< HEAD
     def plot_grafico_box(self, dataset, my_x, my_y, variable):
+=======
+    def plot_grafico(self, dataset, my_x, my_y, variable):
+>>>>>>> master
         my_palette = sns.diverging_palette(255, 133, l=60, n=12, center="light")
         with sns.plotting_context("talk", font_scale=1.5):
             
@@ -46,6 +50,7 @@ class To_Seaborn():
             plt.figure(figsize=(17, 8))
             self.g = sns.boxplot(x=my_x, y = my_y, data=dataset,
                        color='greenyellow')
+<<<<<<< HEAD
     def set_violin_dataset(self):
         violin_data_set = pd.DataFrame({'Mês': [], 'Variável': [], 'Valor': [], 'Ano': []})
         for index in self.dataset.index:
@@ -76,6 +81,14 @@ class To_Seaborn():
     def set_violin_month_data_set(self, mes):
         for index in self.dataset:
             self.dataset.drop(column, axis=1, inplace=True)
+=======
+            
+            
+            
+            sns.plt.savefig('../../data/images/analise_variaveis/boxplot_' + variable +  '.png')
+            
+    
+>>>>>>> master
     
 if __name__ == '__main__':
     #print('oier')
@@ -85,16 +98,25 @@ if __name__ == '__main__':
     #ETC = '_regression_dataset_normalized'
 #     ETC = '_inputs'
     #PATH_INPUT = '../../data/files/ann_output_files/' + MONTH + '_' + TIME_GAP  + ETC + '.csv'
+<<<<<<< HEAD
     #PATH_INPUT = '../../data/files/original/AllData.csv'
     PATH_INPUT = '../../data/files/original/AllNormalizedData.csv'
+=======
+    PATH_INPUT = '../../data/files/original/AllData.csv'
+>>>>>>> master
     #PATH_INPUT = '../../data/files/ann_output_files/01_6_regression_dataset_normalized.csv'
     #PATH_INPUT = '../../data/files/anninputs/nonnormalizedinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
     #PATH_OUTPUT = '../../data/files/latex/' + 'tabela' + MONTH + '_' + TIME_GAP + ETC + '.tex'
     #PATH_OUTPUT = '../../data/files/latex/' + 'tabela' + MONTH + '_' + TIME_GAP + ETC + '.tex'
+<<<<<<< HEAD
     #jan = To_Seaborn(PATH_INPUT)
     #jan.get_variable_dataset('nino3', 'Mês', 'Niño 3')
     #PATH_INPUT = '../../data/files/original/AllNormalizedSeabornData.csv'
     violin = To_Seaborn(PATH_INPUT)
     #violin_data_set = violin.set_violin_dataset()
     violin.plot_grafico_violino('Variável', 'Valor')
+=======
+    jan = To_Seaborn(PATH_INPUT)
+    jan.get_variable_dataset('nino3', 'Mês', 'Niño 3')
+>>>>>>> master
     
