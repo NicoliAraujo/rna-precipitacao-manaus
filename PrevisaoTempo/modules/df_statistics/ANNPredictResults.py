@@ -14,8 +14,16 @@ class ANNPredictPlotting():
     
     def plotanomaly(self, type, dataset, month, time_gap):
 #         #print(self.dataset)
+        #col_list = ["black", "greenyellow", "aquamarine", 
+        #            "hotpink", "gold", 'royalblue']
         col_list = ["mediumblue", "darkkhaki", "salmon", 
                     "palegreen", "paleturquoise", 'violet']
+        my_palette = [(sns.hls_palette(8, l=.3, s=.8)[5])]
+        print(my_palette)
+        #print(my_palette)
+        for color in sns.color_palette("husl", 7):
+            my_palette.append(color)
+        print(my_palette)
 #         self.g = sns.factorplot(x='Year', y='Norm', hue = 'from', data=dataset, size = 8, aspect = 3,
 #                    kind="bar", palette=col_list, legend=False)
 #         
@@ -28,21 +36,24 @@ class ANNPredictPlotting():
 #         sns.plt.savefig('../../data/images/predictanalysis/' + '01' + type + '.png')
         with sns.plotting_context("notebook",font_scale=2):
             self.g = sns.factorplot(x='Year', y='Norm', hue = 'from', data=dataset, size = 12, aspect = 2,
-                       kind="bar", palette=col_list, legend=False)
+                       kind="bar", palette=my_palette, legend=False)
             self.g.despine(left=True)
-            self.g.set_ylabels("Precipitação")
+            sns.set_style("whitegrid")
+            self.g.set_ylabels("Precipitação(mm)")
             self.g.set_xlabels("Ano")
             plt.legend(loc='upper right')
             self.g.set_titles(fontsize=2)
             sns.plt.savefig('../../data/images/predictanalysis/' + month + '_' + type + '_' + '.png')
             
     def __init__(self, filename, month, time_gap, type):
-        self.dataset = self.read_data_set(filename)
+        '''self.dataset = self.read_data_set(filename)
         self.dataset1 = self.dataset[self.dataset['Year']>=2008]
         self.dataset2 = self.dataset[self.dataset['Year']<2008]
         #print(type)
         self.plotanomaly(type+'_pt1', self.dataset1, month, time_gap)
-        self.plotanomaly(type+'_pt2', self.dataset2, month, time_gap,)
+        self.plotanomaly(type+'_pt2', self.dataset2, month, time_gap,)'''
+        self.dataset = self.read_data_set(filename)
+        self.plotanomaly(type, self.dataset, month, time_gap)
         #self.g.show()
 if __name__ == '__main__':
     MONTH = '01'
