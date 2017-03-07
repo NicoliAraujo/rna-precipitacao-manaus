@@ -9,7 +9,7 @@ from PredictBest import Predict_Best
 
 if __name__ == '__main__':
     MONTH = '01'
-    TIME_GAP = '12'
+    TIME_GAP = '6'
     EXTENSION = 'csv'
     FILENAME = '../../data/files/anninputs/normalizedinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
     RFANN = RainfallRegressor(FILENAME, n_layers=2, n_nodes=7)
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     
     RESULT_NETS_CSV = '../../data/files/ann_output_files/' + MONTH+ '_' + TIME_GAP + '_regression_dataset_normalized.csv'
     
-    PB = Predict_Best(RFANN.result_networks, RFANN.test_data, MONTH, num_nets=5)
+    PB = Predict_Best(RFANN.result_networks, RFANN.test_data, MONTH, num_nets=3)
     PB.set_predict_df()
     PB.set_predict_df_seaborn()
  

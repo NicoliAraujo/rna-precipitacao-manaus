@@ -22,10 +22,10 @@ class ResultDataSet():
         ta = taxa de aprendizado
         fv= fração de validação
         '''
-        #dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [], 
+        #dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [],
         #        'TA': [], 'FV': [], 'MSE Treinamento': [],
         #        'MSE Teste': [], 'MAPE Teste': [], 'Acurácia': []}
-        dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [], 
+        dict_net = {'Arquitetura': [], 'FA': [], 'Alpha': [],
                 'TA': [], 'FV': [], 'MAPE Teste': [], 'Acurácia': []}
         for result_net in self.result_net_list:
             #print(result_net.net.hidden_layer_sizes)
@@ -42,12 +42,12 @@ class ResultDataSet():
         #print(self.df)
         self.df.sort_values(by='MAPE Teste', ascending=True, inplace=True)
         self.df.index = [i for i in range(1, len(self.df)+1)]
-        #cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MSE Treinamento', 
+        #cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MSE Treinamento',
         #        'MSE Teste', 'MAPE Teste',  'Acurácia']
         cols = ['Arquitetura', 'FA', 'Alpha', 'TA', 'FV', 'MAPE Teste',  'Acurácia']
         self.df = self.df[cols]
         #print(self.df)
-        
+
     def save_results(self, filename):
         with open(filename, 'w') as file:
             self.df.to_csv(filename)
@@ -97,19 +97,19 @@ class ResultNet():
         test_expected, test_obtained = test_data
         dif = abs(test_expected - abs(test_obtained))/test_expected
         self.__mape_test = 100/len(dif) * dif.sum()
-        
+
     def __repr__(self):
         return "{0}: \nMSE treinamento: {1}\nMSE teste: {2}\nMAPE teste: {3}%\n\n".format(self.net, self.mse_test, self.mse_test, self.mape_test)
-    
+
     def __lt__(self, other):
         if self.mape_test < other.mape_test:
             return True
         else:
             return False
-        
+
 class RainfallRegressor(object):
     '''
-    
+
     '''
 
     def read_data_set(self, filename):
@@ -155,10 +155,10 @@ class RainfallRegressor(object):
         #print(self.data_set.corr())
         #print(input, output)
 
-        self.train_data = {'input': self.data_set.loc[1950:2000][my_input], 
+        self.train_data = {'input': self.data_set.loc[1950:2000][my_input],
                            'output':self.data_set.loc[1950:2000][output]}
-        
-        self.test_data = {'input': self.data_set.loc[2001:2015][my_input], 
+
+        self.test_data = {'input': self.data_set.loc[2001:2015][my_input],
                           'output': self.data_set.loc[2001:2015][output]}
         #print(self.test_data)
         self.neural_networks = self.start_networks(n_layers, n_nodes)
@@ -172,7 +172,7 @@ class RainfallRegressor(object):
             result_train_data = network.predict(self.train_data['input'])
             result_test_data = network.predict(self.test_data['input'])
 
-            result_net = ResultNet(network, 
+            result_net = ResultNet(network,
                                    (self.train_data['output'], result_train_data),
                                    (self.test_data['output'], result_test_data))
             self.result_networks.append(result_net)
@@ -190,5 +190,3 @@ class RainfallRegressor(object):
             #print(network.score(self.test_data[0], self.test_data[1]))
 
             #print(network.loss_)
-
-    
