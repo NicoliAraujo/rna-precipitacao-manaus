@@ -22,9 +22,6 @@ def my_pca(filename, variable_list):
     for j in range(len(pca.components_[0])):
         for i in range(len(pca.components_)):
 
-            pca_df_seaborn = pca_df_seaborn.append({'Componente': i, 
-                                   'Variável': all_data.columns[j], 
-
             pca_df_seaborn = pca_df_seaborn.append({'Componente': i,
                                    'Variável': all_data.columns[j],
                                    'Valor': pca.components_[i][j]}, ignore_index=True)
