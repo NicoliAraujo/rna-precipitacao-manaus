@@ -16,8 +16,9 @@ def my_pca(filename, variable_list):
     
     eval_data = np.array(all_data)
     
-    pca = PCA(n_components=2)
+    pca = PCA(n_components=len(all_data.columns))
     pca.fit(eval_data)
+    print(pca.components_)
     pca_df_seaborn = pd.DataFrame({'Componente': [], 'Variável': [], 'Valor': []})
     for j in range(len(pca.components_[0])):
         for i in range(len(pca.components_)):
@@ -73,7 +74,7 @@ def plot_pca(pca_df):
 def read_data_set(filename):
     return pd.read_csv(filename, sep=r',', index_col=0)
 if __name__ == '__main__':
-    PATH_INPUT = '../../data/files/original/AllData.csv'
+    PATH_INPUT = '../../data/files/original/csv/AllData.csv'
 #     variable_list = ['rainfall_01', 'rainfall_02', 'rainfall_03', 'rainfall_04',
 #        'rainfall_05', 'rainfall_06', 'rainfall_07', 'rainfall_08',
 #        'rainfall_09', 'rainfall_10', 'rainfall_11', 'rainfall_12', 'nino12_01',
