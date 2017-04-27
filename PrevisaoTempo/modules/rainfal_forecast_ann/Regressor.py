@@ -139,7 +139,7 @@ class RainfallRegressor(object):
                                                        learning_rate_init=my_learning_rate_init,
                                                        verbose=False, early_stopping=True,
                                                        validation_fraction=my_validation_fraction,
-                                                       max_iter=20000)
+                                                       max_iter=2000)
                                 neural_networks.append(network)
         return neural_networks
 
