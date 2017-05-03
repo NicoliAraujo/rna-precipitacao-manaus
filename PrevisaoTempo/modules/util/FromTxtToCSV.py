@@ -4,9 +4,10 @@ Created on 12 de set de 2016
 
 @author: Nicoli Araujo
 '''
+from datetime import date
+
 import numpy as np
 import pandas as pd
-from datetime import date
 
 
 class FromTxtToCSV():

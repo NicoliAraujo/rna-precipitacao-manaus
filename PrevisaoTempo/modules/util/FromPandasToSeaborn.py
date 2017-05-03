@@ -4,11 +4,14 @@ Created on 29 de dez de 2016
 @author: nicoli
 Código que gera boxplots e violinplots em escala de cinza com ticks das variáveis usadas para usar em artigo
 '''
-import pandas as pd
-import seaborn as sns
+from numpy import int8, float64
+
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy import int8, float64
+import pandas as pd
+import seaborn as sns
+
+
 class To_Seaborn():
     def __init__(self, filename):
         self.dataset = self.read_data_set(filename)

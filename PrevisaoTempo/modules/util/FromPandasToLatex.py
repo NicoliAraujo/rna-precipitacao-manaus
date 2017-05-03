@@ -4,6 +4,8 @@ Created on 29 de dez de 2016
 @author: nicoli
 '''
 import pandas as pd
+
+
 class ToLatex():
     def __init__(self, path_input=''):
         self.path_input = path_input

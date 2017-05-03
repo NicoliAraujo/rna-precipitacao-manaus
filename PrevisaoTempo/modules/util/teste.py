@@ -4,10 +4,12 @@ Created on 26 de fev de 2017
 @author: nicoli
 '''
 import random
-import pandas as pd
-from sklearn.neural_network.multilayer_perceptron import MLPRegressor
-from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import mean_absolute_error as mae
+from sklearn.metrics import mean_squared_error as mse
+from sklearn.neural_network.multilayer_perceptron import MLPRegressor
+
+import pandas as pd
+
 
 x = [random.randrange(10) for i in range(10)]
 y = [random.randrange(10) for i in range(10)]

@@ -6,9 +6,11 @@ Created on 28 de fev de 2017
 '''
 
 
-import pandas as pd
-import numpy as np
 from sklearn.decomposition import PCA
+
+import numpy as np
+import pandas as pd
+
 
 data_set = pd.read_csv('../files/db_pca.csv', index_col = 0)
 data_set = np.array(data_set)
