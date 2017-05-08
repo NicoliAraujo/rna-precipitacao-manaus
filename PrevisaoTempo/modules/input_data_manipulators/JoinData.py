@@ -89,7 +89,7 @@ class JoinData():
         #print(self.dfDict)
     def save_join(self):
         '''salva o df gerado em um csv'''
-        with open('../../data/files/original/csv/AllScaleData.csv', 'w') as file:
+        with open('../../data/files/original/csv/AllStdData.csv', 'w') as file:
             self.join_df.to_csv(file)
 
     def __init__(self, data_dict, data_sequence_list):

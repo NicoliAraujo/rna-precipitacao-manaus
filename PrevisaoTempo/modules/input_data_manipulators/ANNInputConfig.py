@@ -17,7 +17,7 @@ class ANNInput():
     '''
     def open_join_data_frame(self):
         '''abre o df com todos os dados'''
-        path = '../../data/files/original/csv/AllScaleData.csv'
+        path = '../../data/files/original/csv/AllStdData.csv'
         return pd.read_csv(path, sep=r',', index_col=0).round(2)
 
     def get_months(self):
@@ -46,21 +46,7 @@ class ANNInput():
         filename = '../../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
         with open(filename, 'w') as file:
             self.month_data.to_csv(file, sep = r',')
-    
-    def normalize_data(self):
-        df = self.month_data
-        
-        '''for name in self.month_data.columns:
-            #print(name[:-3])
-            if name[:-3] != 'tsa':
-                #print(self.join_df[name].sum())
-                #print(df[name])
-                df[name] = self.month_data[name]/self.month_data[name].abs().sum()
-                #print(df[name])
-                self.month_data = df'''
-        self.month_data = scale(self.month_data)
-        print(self.month_data)
-        
+          
         
                 
 if __name__ == '__main__':
@@ -71,4 +57,4 @@ if __name__ == '__main__':
         #ANNINPUT.save('scale')
         #ANNINPUT.normalize_data()
         #print(ANNINPUT.month_data)
-        ANNINPUT.save('ann_inputs_scale')
+        ANNINPUT.save('normalized_inputs_std')

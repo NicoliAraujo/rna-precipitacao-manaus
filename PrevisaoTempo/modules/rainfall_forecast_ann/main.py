@@ -5,8 +5,8 @@ Created on 26 de fev de 2017
 '''
 #from modules.rainfal_forecast_ann.Regressor import R
 
-from modules.rainfal_forecast_ann.RainfallRegressor import RainfallRegressor
-from modules.rainfal_forecast_ann.ResultsParser import ResultsParser
+from modules.rainfall_forecast_ann.RainfallRegressorNets import RainfallRegressorNets
+from modules.rainfall_forecast_ann.ResultsParser import ResultsParser
 
 
 if __name__ == '__main__':
@@ -33,9 +33,8 @@ if __name__ == '__main__':
     RESULT_NETS_CSV = ['../../data/files/ann_output_files/', MONTH+ '_' + TIME_GAP + '_regression_dataset_normalized.csv']
     
     
-    RFANN = RainfallRegressor(FILENAME, n_layers=2, n_nodes=7)
-    RFANN.fit_networks()
-    RFANN.predict_networks()
+    RFANN = RainfallRegressorNets(FILENAME, n_layers=2, n_nodes=7)
+    RFANN.train_test_nets()
     RFANN.save_networks(MONTH, TIME_GAP)
     
     PS = ResultsParser(RFANN.result_networks, RFANN.test_data, MONTH, num_nets=3, source_df_filename=FILENAME_SOURCE)

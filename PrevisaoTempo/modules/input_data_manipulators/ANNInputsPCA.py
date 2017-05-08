@@ -6,11 +6,11 @@ Created on 26 de abr de 2017
 
 from sklearn.decomposition import PCA
 
-#from modules.util.FromPandasToLatex import save_dataset as save
-#import numpy as np
 import pandas as pd
 
 
+#from modules.util.FromPandasToLatex import save_dataset as save
+#import numpy as np
 class ANNInputsPCA():
     '''Classe que cria e salva os datasets com os pcas para servir de entrada para as redes neurais
     '''
