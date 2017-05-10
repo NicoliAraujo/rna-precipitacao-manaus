@@ -14,15 +14,15 @@ if __name__ == '__main__':
     CHUVA2008_2015.months_data_frame.index.name = 'Year'
     FILEPATH2 = '../../data/files/original/csv/rainfall_2008_2015.csv'
     
-    #print(CHUVA2008_2015.months_data_frame)
+    # print(CHUVA2008_2015.months_data_frame)
     CHUVA2008_2015.months_data_frame.to_csv(FILEPATH2, sep=r',', decimal=2)
     
     FILEPATH4 = '../../data/files/original/csv/rainfall1925_2007.csv'
     rainfall_1925_2007 = pd.read_csv(FILEPATH4, sep=r',', index_col=0)
     FILEPATH3 = '../../data/files/original/csv/rainfall_1925_2015.csv'
-    #print(rainfall_1925_2007)
-    #print(CHUVA2008_2015.months_data_frame)
-    rainfall_1925_2015 = pd.concat([rainfall_1925_2007,CHUVA2008_2015.months_data_frame])
-    #print(rainfall_1925_2015)
-    #print(rainfall_1925_2015.dtypes)
+    # print(rainfall_1925_2007)
+    # print(CHUVA2008_2015.months_data_frame)
+    rainfall_1925_2015 = pd.concat([rainfall_1925_2007, CHUVA2008_2015.months_data_frame])
+    # print(rainfall_1925_2015)
+    # print(rainfall_1925_2015.dtypes)
     rainfall_1925_2015.to_csv(FILEPATH3, sep=r',')

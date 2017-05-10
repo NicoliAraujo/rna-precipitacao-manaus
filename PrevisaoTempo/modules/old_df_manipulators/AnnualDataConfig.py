@@ -31,16 +31,16 @@ class AnnualDataConfig(object):
     '''
 
     def getMonthDataFrame(self):
-        return pd.read_csv('../../data/files/monthly/RainfallByDay/' + str(self.month) + 'd.csv', sep = r',')
+        return pd.read_csv('../../data/files/monthly/RainfallByDay/' + str(self.month) + 'd.csv', sep=r',')
     
     def setDataFrame(self, df):
-        dflist = [[],[]]
+        dflist = [[], []]
     
         for i in range(0, df['Date'].size):
             dflist[0].append(int(df['Date'][i][-4:]))
             dflist[1].append(df[self.param][i])
-        newdf = pd.DataFrame ( {'Year': dflist[0],
-                                self.param : dflist[1] } )
+        newdf = pd.DataFrame ({'Year': dflist[0],
+                                self.param : dflist[1] })
         return newdf
     
     def accumParam(self, df):
@@ -52,22 +52,22 @@ class AnnualDataConfig(object):
             if (key not in acParam) :
                 acParam[key] = value
             elif (key in acParam) :
-                acParam[key] +=value
+                acParam[key] += value
      
-        acParamlist = [[],[]]
+        acParamlist = [[], []]
         for i in acParam:
             acParamlist[0].append(i)
             acParamlist[1].append(acParam[i])
 
-        newdf = pd.DataFrame( {self.param: acParamlist[1]}, index = acParamlist[0] )
+        newdf = pd.DataFrame({self.param: acParamlist[1]}, index=acParamlist[0])
         
         newdf.index.name = 'Year'
         
-        newdf = newdf.loc[newdf.index <=2010]
+        newdf = newdf.loc[newdf.index <= 2010]
         
         newdf = newdf.loc[newdf['RAINFALL'].notnull() == True]
         
-        newdf.sort_index(inplace = True)
+        newdf.sort_index(inplace=True)
         
         return newdf
     

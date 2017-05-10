@@ -84,7 +84,7 @@ class RainfallClassifier(object):
         '''mudar implementação pra ter layers em função de nlayers
         '''
         layers = []
-        nodelist = [i for i in range(1,n_nodes+1)]
+        nodelist = [i for i in range(1, n_nodes + 1)]
         layers.append(itertools.product(nodelist, nodelist, repeat=1))
         layers.append(itertools.product(nodelist, repeat=1))
         '''for i in layers:
@@ -99,8 +99,8 @@ class RainfallClassifier(object):
             for node_setup in layer_setup:
                 for act in ['logistic', 'tanh']:
                     for my_alpha in [0.0001, 0.01]:
-                        for my_learning_rate_init in [0.001,0.003]:
-                            for my_validation_fraction in [0.1,0.0462]:
+                        for my_learning_rate_init in [0.001, 0.003]:
+                            for my_validation_fraction in [0.1, 0.0462]:
                                 network = MLPClassifier(hidden_layer_sizes=node_setup,
                                                        activation=act, solver='sgd',
                                                        alpha=my_alpha,
@@ -112,30 +112,30 @@ class RainfallClassifier(object):
         return neural_networks
     
     def classify_outputs(self, data_set, output_col):
-        #normalizar dados
-        #print(data_set)
+        # normalizar dados
+        # print(data_set)
         output_mean = data_set[output_col].mean()
         new_data_set = data_set.copy()
         new_data_set[output_col][data_set[output_col] > output_mean] = 1
-        #print(new_data_set[output_col], '\n', output_mean)
+        # print(new_data_set[output_col], '\n', output_mean)
         new_data_set[output_col][data_set[output_col] < output_mean] = -1
-        #print(new_data_set[output_col], '\n', output_mean)
+        # print(new_data_set[output_col], '\n', output_mean)
         new_data_set[output_col][data_set[output_col] == output_mean] = 0
-        #print(new_data_set[output_col], '\n', output_mean)
+        # print(new_data_set[output_col], '\n', output_mean)
         
         return new_data_set
     
     def normalize_data_set(self, data_set, output_col):
-        #normalizar dados
-        #print(data_set)
-        #output_mean = data_set[output_col].mean()
+        # normalizar dados
+        # print(data_set)
+        # output_mean = data_set[output_col].mean()
         new_data_set = data_set.copy()
-        new_data_set = (data_set - data_set.mean())/data_set.mean()
-        #print(new_data_set[output_col], '\n', output_mean)
-        #new_data_set[output_col][data_set[output_col] < output_mean] = -1
-        #print(new_data_set[output_col], '\n', output_mean)
-        #new_data_set[output_col][data_set[output_col] == output_mean] = 0
-        #print(new_data_set[output_col], '\n', output_mean)
+        new_data_set = (data_set - data_set.mean()) / data_set.mean()
+        # print(new_data_set[output_col], '\n', output_mean)
+        # new_data_set[output_col][data_set[output_col] < output_mean] = -1
+        # print(new_data_set[output_col], '\n', output_mean)
+        # new_data_set[output_col][data_set[output_col] == output_mean] = 0
+        # print(new_data_set[output_col], '\n', output_mean)
         
         return new_data_set
     
@@ -144,53 +144,53 @@ class RainfallClassifier(object):
         Constructor
         '''
         self.data_set = self.read_data_set(filename)
-        #print(self.data_set.dtypes)
+        # print(self.data_set.dtypes)
         my_input = self.data_set.columns[1:]
         output = self.data_set.columns[0]
 
         self.data_set = self.classify_outputs(self.data_set, output)
-        #print(self.data_set.corr())
-        #print(input, output)
+        # print(self.data_set.corr())
+        # print(input, output)
 
-        self.train_data = {'input': self.data_set.loc[1950:2001][my_input], 
+        self.train_data = {'input': self.data_set.loc[1950:2001][my_input],
                            'output':self.data_set.loc[1950:2001][output]}
         
-        self.test_data = {'input': self.data_set.loc[2002:2015][my_input], 
+        self.test_data = {'input': self.data_set.loc[2002:2015][my_input],
                           'output': self.data_set.loc[2002:2015][output]}
-        #print(self.test_data)
+        # print(self.test_data)
         self.neural_networks = self.start_networks(n_layers, n_nodes)
-        #print(self.train_data, self.test_data)
+        # print(self.train_data, self.test_data)
 
     def predict_networks(self):
         '''não retorna valores corretos'''
-        filename = '../../data/files/ann_output_files/' + MONTH+ '_' + TIME_GAP + '_outputs_classificados' + '.txt'
+        filename = '../../data/files/ann_output_files/' + MONTH + '_' + TIME_GAP + '_outputs_classificados' + '.txt'
         with open(filename, 'w') as file:
             for network in self.neural_networks:
                 file.write(str(network))
-                #mse para treinamento
+                # mse para treinamento
                 result = network.predict(self.train_data['input'])
-                #print(result, '\n', self.train_data['output'], self.test_data['output'])
+                # print(result, '\n', self.train_data['output'], self.test_data['output'])
                 file.write('MSE treinamento: ' + str(mse(self.train_data['output'], result)) + '\n')
-                #mse para teste
+                # mse para teste
                 result = network.predict(self.test_data['input'])
-                #print(self.test_data['output'], '\n', result)
+                # print(self.test_data['output'], '\n', result)
                 file.write('MSE teste: ' + str(mse(self.test_data['output'], result)) + '\n')
-                #mape para teste
+                # mape para teste
                 result = network.predict(self.test_data['input'])
-                file.write('MAPE teste: ' + str(100*mae(self.test_data['output'], result)) + '%' + '\n')
+                file.write('MAPE teste: ' + str(100 * mae(self.test_data['output'], result)) + '%' + '\n')
 
     def fit_networks(self):
         for network in self.neural_networks:
             network = network.fit(self.train_data['input'], self.train_data['output'])
-            #print(network.score(self.test_data[0], self.test_data[1]))
+            # print(network.score(self.test_data[0], self.test_data[1]))
 
-            #print(network.loss_)
+            # print(network.loss_)
     
 if __name__ == '__main__':
     MONTH = '01'
     TIME_GAP = '6'
     EXTENSION = 'csv'
-    FILENAME = '../../data/files/anninputs/anomalyinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
+    FILENAME = '../../data/files/anninputs/anomalyinputs/' + MONTH + '_' + TIME_GAP + '.' + EXTENSION
     RFANN = RainfallClassifier(FILENAME, n_layers=2, n_nodes=7)
     RFANN.fit_networks()
     RFANN.predict_networks()

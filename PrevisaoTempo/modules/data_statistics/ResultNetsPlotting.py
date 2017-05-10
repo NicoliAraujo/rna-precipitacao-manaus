@@ -15,14 +15,14 @@ class ResultNetsPlotting():
     
     def plotanomaly(self, type, dataset, month, time_gap):
 #         #print(self.dataset)
-        #col_list = ["black", "greenyellow", "aquamarine", 
+        # col_list = ["black", "greenyellow", "aquamarine", 
         #            "hotpink", "gold", 'royalblue']
-        col_list = ["mediumblue", "darkkhaki", "salmon", 
+        col_list = ["mediumblue", "darkkhaki", "salmon",
                     "palegreen", "paleturquoise", 'violet']
-        #my_palette = [(sns.hls_palette(8, l=.3, s=.8)[5])]
+        # my_palette = [(sns.hls_palette(8, l=.3, s=.8)[5])]
         my_palette = ['black']
         print(my_palette)
-        #print(my_palette)
+        # print(my_palette)
         for color in sns.color_palette("colorblind", 7):
             my_palette.append(color)
         print(my_palette)
@@ -36,8 +36,8 @@ class ResultNetsPlotting():
 #         plt.legend(loc='upper right')
 #         sns.plotting_context("notebook", font_scale=8)
 #         sns.plt.savefig('../../data/images/predictanalysis/' + '01' + type + '.png')
-        with sns.plotting_context("notebook",font_scale=2):
-            self.g = sns.factorplot(x='Year', y='Norm', hue = 'from', data=dataset, size = 12, aspect = 2,
+        with sns.plotting_context("notebook", font_scale=2):
+            self.g = sns.factorplot(x='Year', y='Norm', hue='from', data=dataset, size=12, aspect=2,
                        kind="bar", palette=my_palette, legend=False)
             self.g.despine(left=True)
             sns.set_style("whitegrid")
@@ -56,24 +56,24 @@ class ResultNetsPlotting():
         self.plotanomaly(type+'_pt2', self.dataset2, month, time_gap,)'''
         self.dataset = self.read_data_set(filename)
         self.plotanomaly(type, self.dataset, month, time_gap)
-        #self.g.show()
+        # self.g.show()
 if __name__ == '__main__':
     MONTH = '01'
     TIME_GAP = '6'
     EXTENSION = 'csv'
-    #TYPE1 = 'regression_normalized'
+    # TYPE1 = 'regression_normalized'
     TYPE2 = 'regression_volume'
     TYPE3 = 'regression_volume_anomaly'
-    #TYPE4 = 'regression_normalized_anomaly'
+    # TYPE4 = 'regression_normalized_anomaly'
     
-    #FILENAME_NORM = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE1 + '_seaborn.csv'
-    FILENAME_VOLUME = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE2 +'_seaborn.csv'
-    FILENAME_ANOMALY = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE3 +'_seaborn.csv'
-    #FILENAME_NORM_ANOMALY = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE4 +'_seaborn.csv'
+    # FILENAME_NORM = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE1 + '_seaborn.csv'
+    FILENAME_VOLUME = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE2 + '_seaborn.csv'
+    FILENAME_ANOMALY = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE3 + '_seaborn.csv'
+    # FILENAME_NORM_ANOMALY = '../../data/files/ann_output_files/ann_output_seaborn/' + MONTH + '_' + TIME_GAP + '_' + TYPE4 +'_seaborn.csv'
     
-    #PLOT = ANNPredictPlotting(FILENAME_NORM, TYPE1)
+    # PLOT = ANNPredictPlotting(FILENAME_NORM, TYPE1)
     PLOT = ResultNetsPlotting(FILENAME_VOLUME, MONTH, TIME_GAP, TYPE2)
     PLOT = ResultNetsPlotting(FILENAME_ANOMALY, MONTH, TIME_GAP, TYPE3)
-    #PLOT = ANNPredictPlotting(FILENAME_NORM_ANOMALY, TYPE4)
+    # PLOT = ANNPredictPlotting(FILENAME_NORM_ANOMALY, TYPE4)
     
     

@@ -12,12 +12,12 @@ import numpy as np
 import pandas as pd
 
 
-data_set = pd.read_csv('../files/db_pca.csv', index_col = 0)
+data_set = pd.read_csv('../files/db_pca.csv', index_col=0)
 data_set = np.array(data_set)
 pca = PCA(n_components=20)
 pca.fit(data_set)
 pca.components_ = np.absolute(pca.components_)
-result = np.sum(pca.components_,axis = 0)
-for i in range(0,len(result)):
-    if(result[i]>=2.5):
+result = np.sum(pca.components_, axis=0)
+for i in range(0, len(result)):
+    if(result[i] >= 2.5):
         print(i)

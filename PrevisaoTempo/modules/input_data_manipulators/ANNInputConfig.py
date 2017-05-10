@@ -24,7 +24,7 @@ class ANNInput():
         '''retorna uma lista com um número time_gap de meses que vão de
         month - 1 até month - timegap, circularmente
         '''
-        all_months = [i for i in range(1,13)]
+        all_months = [i for i in range(1, 13)]
         return [all_months[int(self.month) - i] for i in range(2, self.time_gap + 2)]
 
     def set_month_data(self):
@@ -43,9 +43,9 @@ class ANNInput():
         self.month_data = pd.DataFrame()
 
     def save(self, folder):
-        filename = '../../data/files/anninputs/' + folder + '/' + self.month + '_'+ str(self.time_gap) + '.csv'
+        filename = '../../data/files/anninputs/' + folder + '/' + self.month + '_' + str(self.time_gap) + '.csv'
         with open(filename, 'w') as file:
-            self.month_data.to_csv(file, sep = r',')
+            self.month_data.to_csv(file, sep=r',')
           
         
                 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     for month in keylist:
         ANNINPUT = ANNInput(month, 6)
         ANNINPUT.set_month_data()
-        #ANNINPUT.save('scale')
-        #ANNINPUT.normalize_data()
-        #print(ANNINPUT.month_data)
+        # ANNINPUT.save('scale')
+        # ANNINPUT.normalize_data()
+        # print(ANNINPUT.month_data)
         ANNINPUT.save('normalized_inputs_std')

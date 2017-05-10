@@ -9,7 +9,7 @@ import pandas as pd
 class ToLatex():
     def __init__(self, path_input=''):
         self.path_input = path_input
-        #self.path_output = path_output
+        # self.path_output = path_output
         self.pandas_data_set = pd.DataFrame
         self.latex_table = ''
         
@@ -45,11 +45,11 @@ def set_dict_nome_variaveis(df):
             'nino4': 'Niño 4 ',
             'tsa': 'TSA '}
     
-    #col_list = [col for col in df.columns if (col[:-3] == 'rainfall_')]
+    # col_list = [col for col in df.columns if (col[:-3] == 'rainfall_')]
     print(df.columns)
-    df.rename(columns={oldname: dict[oldname[:-3]]+oldname[-2:] for oldname in df.columns}, inplace=True)
+    df.rename(columns={oldname: dict[oldname[:-3]] + oldname[-2:] for oldname in df.columns}, inplace=True)
     a = str(df.index[0])
-    df.index = [dict[a[:-3]]+a[-2:]]
+    df.index = [dict[a[:-3]] + a[-2:]]
     return df
 def save_dataset(dataset, filename):
     dataset = set_dict_nome_variaveis(dataset.transpose())
@@ -59,21 +59,21 @@ def save_dataset(dataset, filename):
         file.write(latex)
         
 if __name__ == '__main__':
-    #print('oier')
+    # print('oier')
     MONTH = '01'
     TIME_GAP = '6'
     EXTENSION = 'csv'
-    #ETC = '_regression_dataset_normalized'
+    # ETC = '_regression_dataset_normalized'
     ETC = '_inputs'
-    #PATH_INPUT = '../../data/files/ann_output_files/' + MONTH + '_' + TIME_GAP  + ETC + '.csv'
+    # PATH_INPUT = '../../data/files/ann_output_files/' + MONTH + '_' + TIME_GAP  + ETC + '.csv'
     PATH_INPUT = '../../data/files/original/AllData.csv'
-    #PATH_INPUT = '../../data/files/ann_output_files/01_6_regression_dataset_normalized.csv'
-    #PATH_INPUT = '../../data/files/anninputs/nonnormalizedinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
-    #PATH_OUTPUT = '../../data/files/latex/' + 'tabela' + MONTH + '_' + TIME_GAP + ETC + '.tex'
-    #PATH_OUTPUT = '../../data/files/latex/' + 'tabela' + MONTH + '_' + TIME_GAP + ETC + '.tex'
+    # PATH_INPUT = '../../data/files/ann_output_files/01_6_regression_dataset_normalized.csv'
+    # PATH_INPUT = '../../data/files/anninputs/nonnormalizedinputs/' + MONTH+ '_' + TIME_GAP + '.' + EXTENSION
+    # PATH_OUTPUT = '../../data/files/latex/' + 'tabela' + MONTH + '_' + TIME_GAP + ETC + '.tex'
+    # PATH_OUTPUT = '../../data/files/latex/' + 'tabela' + MONTH + '_' + TIME_GAP + ETC + '.tex'
     jan = ToLatex(PATH_INPUT)
     jan.from_csv_to_latex()
     print(jan.latex_table)
-    #jan.save_latex(PATH_OUTPUT)
+    # jan.save_latex(PATH_OUTPUT)
     
     

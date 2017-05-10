@@ -3,8 +3,8 @@
 Created on 26 de set de 2016
 @author: pibic-elloa-nicoli
 '''
-#from FromTxtToCSV import MMFromTxtToCSV, Rainfall2008_2015
-#from df_statistics.DataStatistics import Anomaly
+# from FromTxtToCSV import MMFromTxtToCSV, Rainfall2008_2015
+# from df_statistics.DataStatistics import Anomaly
 from sklearn.preprocessing import scale
 
 import pandas as pd
@@ -39,14 +39,14 @@ class JoinData():
 
     def set_df_col_name(self, df_dict, name):
         namelist = []
-        #print(self.dfDict[name])
+        # print(self.dfDict[name])
         for collumn in df_dict[name]:
             namelist.append(collumn)
-            #print(namelist, collumn)
+            # print(namelist, collumn)
         for i in range(len(namelist)):
-            #print(collumn)
+            # print(collumn)
             namelist[i] = name + '_' + namelist[i]
-        #print(namelist)
+        # print(namelist)
         df_dict[name].columns = namelist
         return df_dict
     
@@ -59,7 +59,7 @@ class JoinData():
         '''concatena os dataframes desejados'''
         for name in self.data_sequence_list:
             self.join_df = pd.concat([self.join_df, self.df_dict[name]], axis=1)
-        #self.set_rainfall_data_frame()
+        # self.set_rainfall_data_frame()
         for l in self.join_df.columns:
             self.join_df[l] = scale(self.join_df[l])
         print(self.join_df)
@@ -68,25 +68,25 @@ class JoinData():
         '''formata um dicionário de dataframes com os dados inputados no main'''
         df_dict = {}
         for key in self.data_dict:
-            #print(key)
+            # print(key)
             
             path = data_dict[key]
             sep = r','
             name = key
-            #print(path, sep, name)
-            #1) pegar os csv original
+            # print(path, sep, name)
+            # 1) pegar os csv original
             data_frame = pd.read_csv(path, sep, index_col=0)
             print(key, data_frame)
-            #)setar anomalias
-            #data_frame = self.set_anomalies(name)
-            #3)setar anos
+            # )setar anomalias
+            # data_frame = self.set_anomalies(name)
+            # 3)setar anos
             data_frame = self.set_years(data_frame, 1950, 2015)
 
             df_dict[name] = data_frame
-            #setar colunas
+            # setar colunas
             df_dict = self.set_df_col_name(df_dict, name)
         return df_dict
-        #print(self.dfDict)
+        # print(self.dfDict)
     def save_join(self):
         '''salva o df gerado em um csv'''
         with open('../../data/files/original/csv/AllStdData.csv', 'w') as file:
@@ -95,19 +95,19 @@ class JoinData():
     def __init__(self, data_dict, data_sequence_list):
         self.data_dict = data_dict
         self.data_sequence_list = data_sequence_list
-        #print(self.data_sequence_list)
+        # print(self.data_sequence_list)
         self.df_dict = self.set_join_dict(self.data_dict)
-        #print(self.df_dict)
-        #print(self.dfDict['rainfall'].columns)
-        #print(self.dfDict['rainfall'])
+        # print(self.df_dict)
+        # print(self.dfDict['rainfall'].columns)
+        # print(self.dfDict['rainfall'])
         self.join_df = pd.DataFrame()
-        #self.join(self.dfDict)
+        # self.join(self.dfDict)
 
 if __name__ == '__main__':
     DATA_DICT = {'rainfall':'../../data/files/original/csv/rainfall_1925_2015.csv',
-                 #'rainfall2008_2015': ['../../data/files/original/other/chuvaMensal2008_2015.txt', ['\t'], 'rainfall2008_2015'],
+                 # 'rainfall2008_2015': ['../../data/files/original/other/chuvaMensal2008_2015.txt', ['\t'], 'rainfall2008_2015'],
                  'nino12': '../../data/files/original/csv/nino12.csv',
-                 'nino3': '../../data/files/original/csv/nino3.csv', 
+                 'nino3': '../../data/files/original/csv/nino3.csv',
                  'nino34':'../../data/files/original/csv/nino34.csv',
                  'nino4': '../../data/files/original/csv/nino4.csv',
                  'tsa':'../../data/files/original/csv/tsa.csv'}

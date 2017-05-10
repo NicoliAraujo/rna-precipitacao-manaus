@@ -51,15 +51,15 @@ class MMFromTxtToCSV(FromTxtToCSV):
         self.data_frame = pd.DataFrame()
         self.column_dict = self.start_collumn_dict()
 
-        #print(self.old_file_data)
+        # print(self.old_file_data)
 
     def replace_separator(self, sep_list):
         '''muda o separador pra ser uma ;'''
         for sep in sep_list:
-            #print(sep)
+            # print(sep)
             for i in range(len(self.old_file_data)):
                 self.old_file_data[i] = self.old_file_data[i].replace(sep, ';')
-        #print(self.old_file_data)
+        # print(self.old_file_data)
 
     def insert_last_comma(self):
         for i in range(len(self.old_file_data)):
@@ -75,8 +75,8 @@ class MMFromTxtToCSV(FromTxtToCSV):
 
     def set_collumns(self):
         for i in range(len(self.old_file_data)):
-            #print(self.old_file_data)
-            #print(self.column_dict)
+            # print(self.old_file_data)
+            # print(self.column_dict)
             cont = 0
             fim = 0
             inicio = 0
@@ -85,16 +85,16 @@ class MMFromTxtToCSV(FromTxtToCSV):
                 letter = line[j]
                 fim += 1
                 if letter == ";":
-                    word = line[inicio:fim-1]
-                    #print(i, word)
+                    word = line[inicio:fim - 1]
+                    # print(i, word)
                     if cont == 0:
                         self.column_dict['Year'].append(int(word))
                     elif cont < 13:
-                        #print(cont, self.keylist[cont-1])
-                        self.column_dict[self.keylist[cont-1]].append(float(word))
+                        # print(cont, self.keylist[cont-1])
+                        self.column_dict[self.keylist[cont - 1]].append(float(word))
                     cont += 1
                     inicio = fim
-        #self.printColumnDict()
+        # self.printColumnDict()
 
     def print_column_dict(self):
         for key in self.column_dict:
@@ -104,20 +104,20 @@ class MMFromTxtToCSV(FromTxtToCSV):
     def set_data_frame(self):
         self.data_frame = pd.DataFrame({key : self.column_dict[key] for key in self.keylist},
                                        index=self.column_dict['Year'])
-        #self.dataFrame = self.dataFrame[self.dataFrame.index != '']
-        #self.dataFrame =self.dataFrame.replace(['', ' '], [np.nan, np.nan])
+        # self.dataFrame = self.dataFrame[self.dataFrame.index != '']
+        # self.dataFrame =self.dataFrame.replace(['', ' '], [np.nan, np.nan])
         self.data_frame.index.name = 'Year'
-        #print(self.dataFrame)
+        # print(self.dataFrame)
 
     def set_csv(self, sep_list, name):
-        #print(self.old_file_data)
+        # print(self.old_file_data)
         self.replace_separator(sep_list)
-        #print(self.old_file_data)
+        # print(self.old_file_data)
         self.insert_last_comma()
         self.set_collumns()
         self.set_data_frame()
         self.save_csv(name)
-        #print(self.column_dict)
+        # print(self.column_dict)
 
     def save_csv(self, name):
         newpath = '../../data/files/original/csv/' + name + '.csv'
@@ -157,30 +157,30 @@ class Rainfall2008_2015(FromTxtToCSV):
             fim = 0
             inicio = 0
             for i in line:
-                fim +=1
-                if (i==";"):
-                    cont+=1
+                fim += 1
+                if (i == ";"):
+                    cont += 1
                     if (cont == 2):
-                        self.col_date.append(line[inicio:fim-1]) 
+                        self.col_date.append(line[inicio:fim - 1]) 
                     elif (cont == 4):
-                        self.col_rainfall.append(line[inicio:fim-1])
+                        self.col_rainfall.append(line[inicio:fim - 1])
                     inicio = fim
-        #print(self.col_date, self.col_rainfall)
+        # print(self.col_date, self.col_rainfall)
     def set_data_frame(self):
-        self.data_frame = pd.DataFrame( {self.labelList[0]: self.col_rainfall}, 
-                                        index = pd.to_datetime(self.col_date))
-        self.data_frame =self.data_frame.replace(['', ' '], [np.nan, np.nan])
+        self.data_frame = pd.DataFrame({self.labelList[0]: self.col_rainfall},
+                                        index=pd.to_datetime(self.col_date))
+        self.data_frame = self.data_frame.replace(['', ' '], [np.nan, np.nan])
         self.data_frame.index.name = 'Date'
         print(self.data_frame)
     def set_months_data_frame(self):
-        #print(self.data_frame)
+        # print(self.data_frame)
         indexlist = [i for i in range(2008, 2016)]
         for key in self.keylist:
             df_month = self.data_frame.loc[self.data_frame.index.month == int(key)]
             df_month.rename(columns={'rainfall': key}, inplace=True)
             df_month.index = indexlist
             self.months_data_frame = pd.concat([self.months_data_frame, df_month], axis=1)
-            #print(self.months_data_frame)
+            # print(self.months_data_frame)
     
     
     def set_data(self, path):
@@ -200,10 +200,10 @@ class Rainfall2008_2015(FromTxtToCSV):
         '''name  =  txt name'''
         self.keylist = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         self.labelList = ['rainfall']
-        #self.labelList = ['']
+        # self.labelList = ['']
         self.col_date = []
         self.col_rainfall = []
         self.set_data(filepath)
-        self.months_data_frame = pd.DataFrame({}, index = [i for i in range(2008,2015)])
+        self.months_data_frame = pd.DataFrame({}, index=[i for i in range(2008, 2015)])
 
-        #print(self.months_data_frame)
+        # print(self.months_data_frame)

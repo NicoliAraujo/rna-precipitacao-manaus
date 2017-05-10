@@ -17,7 +17,7 @@ class DataPlotting(object):
     classdocs
     '''
     def getMonthDataFrame(self, month):
-        return pd.read_csv('../data/files/monthly/RainfallByDay' + str(month) + 'd.csv', sep = r',')
+        return pd.read_csv('../data/files/monthly/RainfallByDay' + str(month) + 'd.csv', sep=r',')
         
     
     '''def getRainfallTest(self):
@@ -36,35 +36,35 @@ class DataPlotting(object):
     def getMonth(self, monthDataFrame):
         newMonthDataFrame = pd.DataFrame()
 
-        #newMonthDataFrame.index = monthDataFrame['Date'].month
+        # newMonthDataFrame.index = monthDataFrame['Date'].month
         newMonthDataFrame['RAINFALL'] = monthDataFrame['RAINFALL']
         newMonthDataFrame['MONTH'] = pd.DatetimeIndex(monthDataFrame["Date"], dayfirst=True).month
         return newMonthDataFrame
     
     def getMonthsRainfallDF(self):
         self.DataFrame = pd.DataFrame()
-        for i in range(1,13):
+        for i in range(1, 13):
             monthdf = self.getMonthDataFrame(i)
             newmonthdf = self.getMonth(monthdf)
-            self.DataFrame = pd.concat([self.DataFrame,newmonthdf])
+            self.DataFrame = pd.concat([self.DataFrame, newmonthdf])
         print(self.DataFrame)
         
-        #print(self.DataFrame.index)
-        #print(self.DataFrame)
+        # print(self.DataFrame.index)
+        # print(self.DataFrame)
 
     
     def __init__(self):
         '''
         Constructor
         '''
-        #self.getMonthsRainfall()
-        #months = ['Janeiro', 'Fevereiro', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+        # self.getMonthsRainfall()
+        # months = ['Janeiro', 'Fevereiro', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
 
         self.getMonthsRainfallDF()
         plt.clf()
-        #self.DataFrame = self.DataFrame.groupby("MONTH").mean()
-        #x = sns.barplot(x = self.DataFrame.index, y = 'RAINFALL', data = self.DataFrame, palette = 'Greys')
-        x = sns.barplot(x="MONTH", y="RAINFALL", data=self.DataFrame,palette="Greys")
+        # self.DataFrame = self.DataFrame.groupby("MONTH").mean()
+        # x = sns.barplot(x = self.DataFrame.index, y = 'RAINFALL', data = self.DataFrame, palette = 'Greys')
+        x = sns.barplot(x="MONTH", y="RAINFALL", data=self.DataFrame, palette="Greys")
         x.set(xlabel='Meses', ylabel='Precipitação')
         sns.plt.savefig('../data/images/PrecxMesMediateste2.pdf')
         sns.plt.savefig('../data/images/PrecxMesMediateste2.png')
