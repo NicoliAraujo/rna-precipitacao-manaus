@@ -10,9 +10,11 @@ from sklearn.metrics import mean_squared_error as mse
 from sklearn.neural_network.multilayer_perceptron import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import scale
+
+from ResultNetsView import ResultNetsView, ResultsParser
 import numpy as np
 import pandas as pd
-from modules.rainfall_forecast_ann.ResultNetsView import ResultNetsView, ResultsParser
+
 
 class RainfallRegressorNets(object):
     '''
@@ -27,7 +29,7 @@ class RainfallRegressorNets(object):
         neural_networks = []
         # hidden_layers = self.set_layers(n_layers, n_nodes)
         hidden_layers = [(3, 9), (4, 8), (5, 7), (6, 6), (7, 5), (8, 4), (9, 3),
-                          (3), (4), (5), (6), (7), (8), (9), (10), (11), (12)]
+                         (3), (4), (5), (6), (7), (8), (9), (10), (11), (12)]
         for layer_setup in hidden_layers:
             for act in ['logistic', 'tanh']:
                 for my_alpha in [0.0001, 0.01]:
@@ -84,7 +86,7 @@ class RainfallRegressorNets(object):
         i=0
         #print(len(self.neural_networks))
         for net in self.neural_networks:
-            #print(i)
+            print(i)
             net.train_test()
             i+=1
 
@@ -102,36 +104,45 @@ class RainfallNet():
     def __init__(self, net, train_data, test_data):
         self.net = net
         self.std_scaler = StandardScaler()
+        
         #print(train_data['input'].shape)
         self.train_data = {'input': scale(train_data['input']),
                            'output': scale(train_data['output'])}
         
         self.test_data = {'input': scale(test_data['input']),
-                           'output': self.std_scaler.fit_transform(test_data['output'].values.reshape(-1,1))}
+                           'output': test_data['output']}
+        self.std_scaler.fit_transform(test_data['output'].values.reshape(-1,1))
         self.result_data_total=np.zeros(len(self.test_data['output']))
         self.mae = 0
         self.mse = 0
-        
-        
+        self.acuracia = 0
+    
+    
+    def acuracia(self):
+        media_historica = self.test_data['output'].mean()
+        for (x,y) in zip(self.test_data['output']):
+            
     
     def train_test(self):   
         
-        for i in range(100):
-            #print('it: ', i)
+        for i in range(10):
+            self.result_data_total=[]
+            print('it: ', i)
             #print(self.train_data['input'].shape, self.train_data['output'].shape)
             self.net = self.net.fit(self.train_data['input'], self.train_data['output'].ravel())
+            #result_test_data = self.net.predict(self.test_data['input'])
             result_test_data = self.std_scaler.inverse_transform(self.net.predict(self.test_data['input']))
-            self.result_data_total+=result_test_data
-            #print(result_test_data)
+            self.result_data_total.append(result_test_data)
+            print(result_test_data, self.test_data['output'])
             self.mae += mae(self.test_data['output'], result_test_data)
             self.mse += mse(self.test_data['output'], result_test_data)
             #print(self.mae, self.mse)
-        self.mse /= 100
-        self.mae /= 100
-        self.result_data_total/=100
-        #print(result_data_total)
+        self.mse /= 10
+        self.mae /= 10
+        self.result_data_total/=10
+        #print(self.result_data_total)
         #print(self.mae, self.mse)
-    
+
     def __repr__(self):
         return "{0}: \nMSE: {1}\nMAE: {2}%\n\n".format(self.net, self.mse, self.mae)
 

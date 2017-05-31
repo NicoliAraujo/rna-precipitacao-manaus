@@ -3,12 +3,15 @@ Created on 10 de mai de 2017
 
 @author: pibic-elloa-nicoli
 '''
-from sklearn.preprocessing import scale
 import random
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network.multilayer_perceptron import MLPRegressor
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import scale
+
+import numpy as np
+import pandas as pd
+
+
 FILENAME = '../../data/files/anninputs/nonnormalizedinputs/01_6.csv'
     
 a = pd.read_csv(FILENAME)
