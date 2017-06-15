@@ -28,9 +28,8 @@ class RainfallRegressorNets(object):
         '''inicializa as redes a ser testadas'''
         neural_networks = []
         # hidden_layers = self.set_layers(n_layers, n_nodes)
-        hidden_layers = [(3, 9), (4, 8), (5, 7)]
-        ''', (6, 6), (7, 5), (8, 4), (9, 3),
-                          (3), (4), (5), (6), (7), (8), (9), (10), (11), (12)'''
+        hidden_layers = [(3, 9), (4, 8), (5, 7), (6, 6), (7, 5), (8, 4), (9, 3),
+                         (3), (4), (5), (6), (7), (8), (9), (10), (11), (12)]
         for layer_setup in hidden_layers:
             for act in ['logistic', 'tanh']:
                 for my_alpha in [0.0001, 0.01]:

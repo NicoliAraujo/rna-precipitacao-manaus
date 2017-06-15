@@ -23,14 +23,14 @@ class Normalizador(object):
         df = self.dataframe
         
         for name in self.dataframe.columns:
-            df[name] = self.dataframe[name]/self.dataframe[name].abs().sum()
+            df[name] = self.dataframe[name] / self.dataframe[name].abs().sum()
             self.dataframe = df
         print(self.dataframe)
     
     def save(self):
         filename = '../../data/files/original/AllNormalizedData.csv'
         with open(filename, 'w') as file:
-            self.dataframe.to_csv(file, sep = r',')
+            self.dataframe.to_csv(file, sep=r',')
             
              
 if __name__ == '__main__':

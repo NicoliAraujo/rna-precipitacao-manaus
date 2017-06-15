@@ -4,11 +4,10 @@ Created on 1 de jun de 2016
 
 @author: nicoli-rna
 '''
-from pandas.tseries.index import DatetimeIndex
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from pandas.tseries.index import DatetimeIndex
 import seaborn as sns
 
 

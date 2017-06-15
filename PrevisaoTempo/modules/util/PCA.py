@@ -4,12 +4,11 @@ Created on 28 de fev de 2017
 
 @author: nicoli
 '''
-from sklearn.decomposition import PCA
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from sklearn.decomposition import PCA
 
 
 def my_pca(filename, variable_list):

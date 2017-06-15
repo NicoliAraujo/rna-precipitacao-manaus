@@ -5,8 +5,8 @@ Created on 26 de fev de 2017
 '''
 # from modules.rainfal_forecast_ann.Regressor import R
 
-from Classifier import RainfallRegressorNets
-#from RainfallRegressorNets import RainfallRegressorNets
+
+from RainfallRegressorNets import RainfallRegressorNets
 from ResultNetsViewVolume import ResultNetsView, ResultsParser
 import pandas as pd
 

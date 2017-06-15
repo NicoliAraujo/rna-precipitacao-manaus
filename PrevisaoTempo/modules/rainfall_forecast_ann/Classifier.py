@@ -65,6 +65,14 @@ class RainfallRegressorNets(object):
         Constructor
         '''
         self.train_data, self.test_data = self.set_train_test_data(dataset_non_normalized)
+        
+        self.neural_networks = self.start_networks()
+    
+    def set_train_test_data(self, dataset):
+        data_set = dataset
+        my_input = data_set.columns[1:]
+        output = data_set.columns[0]
+        self.train_data, self.test_data = self.set_train_test_data(dataset_non_normalized)
         self.neural_networks = self.start_networks()
     
     def set_train_test_data(self, dataset):

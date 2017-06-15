@@ -4,10 +4,9 @@ Created on Jul 18, 2016
 
 @author: Nicoli
 '''
-from sklearn.preprocessing import scale
-
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import scale
 
 
 class ANNInput():

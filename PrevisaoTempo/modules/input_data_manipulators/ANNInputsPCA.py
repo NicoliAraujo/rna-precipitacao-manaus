@@ -4,9 +4,8 @@ Created on 26 de abr de 2017
 @author: pibic-elloa-nicoli
 '''
 
-from sklearn.decomposition import PCA
-
 import pandas as pd
+from sklearn.decomposition import PCA
 
 
 #from modules.util.FromPandasToLatex import save_dataset as save

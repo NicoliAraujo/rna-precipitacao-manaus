@@ -5,9 +5,8 @@ Created on 26 de set de 2016
 '''
 #from FromTxtToCSV import MMFromTxtToCSV, Rainfall2008_2015
 #from df_statistics.DataStatistics import Anomaly
-from sklearn.preprocessing import scale
-
 import pandas as pd
+from sklearn.preprocessing import scale
 
 
 class JoinData():
