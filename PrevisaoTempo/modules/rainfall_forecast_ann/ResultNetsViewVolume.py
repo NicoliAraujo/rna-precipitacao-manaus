@@ -48,8 +48,8 @@ class ResultNetsView():
         name = filename[0]+filename[1]
         with open(name, 'w') as file:
             self.df.to_csv(name)
-        with open(name[:-4]+'.tex', 'w') as file:
-            file.write(self.df.to_latex())
+        '''with open(name[:-4]+'.tex', 'w') as file:
+            file.write(self.df.to_latex())'''
 
 
 class ResultsParser():

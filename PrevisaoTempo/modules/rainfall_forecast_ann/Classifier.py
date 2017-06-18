@@ -34,15 +34,14 @@ class RainfallRegressorNets(object):
             for act in ['logistic', 'tanh']:
                 for my_alpha in [0.0001, 0.01]:
                     for my_learning_rate_init in [0.001, 0.003]:
-                        for my_validation_fraction in [0.1, 0.2]:
-                            network = MLPRegressor(hidden_layer_sizes=layer_setup,
-                                                   activation=act, solver='sgd',
-                                                   alpha=my_alpha,
-                                                   learning_rate_init=my_learning_rate_init,
-                                                   verbose=False, early_stopping=True,
-                                                   validation_fraction=my_validation_fraction,
-                                                   max_iter=2000)
-                            neural_networks.append(RainfallNet(network, self.train_data, self.test_data))
+                        network = MLPRegressor(hidden_layer_sizes=layer_setup,
+                                               activation=act, solver='sgd',
+                                               alpha=my_alpha,
+                                               learning_rate_init=my_learning_rate_init,
+                                               verbose=False, early_stopping=True,
+                                               validation_fraction=0.1,
+                                               max_iter=2000)
+                        neural_networks.append(RainfallNet(network, self.train_data, self.test_data))
         return neural_networks
         '''hidden_layers = [(3, 9), (4, 8), (10), (11), (12)]
         for layer_setup in hidden_layers:
@@ -122,8 +121,8 @@ class RainfallNet():
                            'output': test_data['output']}
         self.std_scaler.fit_transform(test_data['output'].values.reshape(-1,1))
         self.result_data_total=np.zeros(len(self.test_data['output']))
-        self.mae = 0
-        self.mse = 0
+        #self.mae = 0
+        #self.mse = 0
         self.acuracia=0
         
     def set_dif(self, df):
@@ -146,7 +145,7 @@ class RainfallNet():
         
     def train_test(self):   
         
-        for i in range(10):
+        for i in range(100):
             #print('it: ', i)
             #print(self.train_data['input'].shape, self.train_data['output'].shape)
             self.net = self.net.fit(self.train_data['input'], self.train_data['output'].ravel())
@@ -154,13 +153,10 @@ class RainfallNet():
             result_test_data = self.std_scaler.inverse_transform(self.net.predict(self.test_data['input']))
             self.result_data_total=result_test_data
             #print(result_test_data, self.test_data['output'])
-            self.mae += mae(self.test_data['output'], result_test_data)
-            self.mse += mse(self.test_data['output'], result_test_data)
+            #self.mae += mae(self.test_data['output'], result_test_data)
+            #self.mse += mse(self.test_data['output'], result_test_data)
             self.myacuracia()
-            #print(self.mae, self.mse)
-        self.mse /= 10
-        self.mae /= 10
-        print(self.acuracia)
+        #print(self.acuracia)
         #print(self.result_data_total)
         #print(self.mae, self.mse)
 
